@@ -29,15 +29,15 @@
                   @endif
                 @endforeach
               </tr>
-              <tr>
               @foreach($all as $d)
+              <tr>
                   @foreach($columns as $column)
                     @if (!in_array($column , ["password" , "remember_token" , "updated_at"]))
                       <td>{{ $d->$column == "" ? "------" : $d->$column }}</td>
                     @endif
                   @endforeach
+              </tr>
               @endforeach
-              <tr>
             </table>
           </div>
           <!-- /.box-body -->

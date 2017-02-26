@@ -7,48 +7,35 @@ use Illuminate\Http\Request;
 use Schema;
 use DB;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
+use App\a_Tables;
 
 class PagesController extends Controller
 {
 
-      public function showAll($table)
+      public function showAll($link)
       {
 
-          $tables = DB::select('SHOW TABLES');
-          $allTables = [];
-          foreach ($tables as $t) {
-                $allTables[] = $t->Tables_in_alpha_cms;
-          }
+          // $tables = DB::select('SHOW TABLES');
+          // $allTables = [];
+          // foreach ($tables as $t) {
+          //       $allTables[] = $t->Tables_in_alpha_cms;
+          // }
 
-          if ($table == "users"){
+          $a_table = a_Tables::where('slug', $link)->first();
 
-              //$conv = "\App\\".ucfirst($table);
-              $allData = \App\User::paginate(8);
-              $keys = [];
-              $columns = Schema::getColumnListing($table);
+          if ($a_table){
 
-              foreach ($columns as $column) {
-                    $c_type = Schema::getColumnType($table , $column);
-                    $keys[$column] = $c_type;
-              }
+              $conv = "\App\\".$a_table->module_name;
+              $allData = $conv::paginate(8);
+              //$keys = [];
+              $columns = Schema::getColumnListing($a_table->table);
 
-              return view("blades.viewAll" , ["columns" => $columns , "all" => $allData , "p_name" => $table]);
+              // foreach ($columns as $column) {
+              //       $c_type = Schema::getColumnType($table , $column);
+              //       $keys[$column] = $c_type;
+              // }
 
-
-
-          } elseif (in_array($table , $allTables) && ($table == "migrations" && $table == "password_resets")) {
-
-              $conv = "\App\\".ucfirst($table);
-              $allData = $conv::get();
-              $keys = [];
-              $columns = Schema::getColumnListing($table);
-
-              foreach ($columns as $column) {
-                    $c_type = Schema::getColumnType($table , $column);
-                    $keys[$column] = $c_type;
-              }
-
-              return view("blades.viewAll" , ["columns" => $columns , "all" => $allData , "p_name" => $table]);
+              return view("blades.viewAll" , ["columns" => $columns , "all" => $allData , "p_name" => $a_table->link_name]);
 
           }else {
               echo "None , انت جيت غلط";

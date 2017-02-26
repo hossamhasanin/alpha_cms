@@ -19,6 +19,8 @@ class ATables extends Migration
           $table->integer('status')->default(1);
           $table->string("slug");
           $table->string("link_name");
+          $table->string("module_name");
+          $table->string("icon");
           $table->timestamps();
       });
     }
