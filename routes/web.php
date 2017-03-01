@@ -21,7 +21,13 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
 
       Route::get('/', 'HomeController@index');
 
-      Route::get("/{table}" , "PagesController@showAll");
+      Route::get("/link/{table}" , "PagesController@showAll");
+
+      Route::get("/add" , function () {
+        return view("blades.addTable");
+      });
+
+      Route::post("/add" , "TableController@AddNew");
 
 });
 
