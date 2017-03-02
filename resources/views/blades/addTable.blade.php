@@ -31,19 +31,46 @@
               {{ Form::text("model_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
             </div>
             <div class="form-group">
+              <label for="exampleInputPassword1">Label Names</label>
+              {{ Form::text("labels_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
+            </div>
+            <div class="form-group">
               <label for="exampleInputPassword1">Icon</label>
               {{ Form::text("icon" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
             </div>
-            <div class="form-group">
-              <label for="exampleInputFile">File input</label>
-              <input type="file" id="exampleInputFile">
+            <hr>
+            <div id="fields">
+              <div class="row">
 
-              <p class="help-block">Example block-level help text here.</p>
+                  <div class="col-xs-3 col-md-3">
+                    <input class="form-control" placeholder="Field Name" type="text">
+                  </div>
+                  <div class="col-xs-3 col-md-3">
+                    <select class="form-control" name="fild_type[]">
+                        <option value="type">Type</option>
+                        <option value="type2">Type2</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-3 col-md-3">
+                    <input class="form-control" placeholder="Label Name" type="text">
+                  </div>
+                  <div class="col-xs-3 col-md-3">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="nullable[]">
+                        Nullable
+                      </label>
+                    </div>
+                  </div>
+                  <!-- <div class="col-xs-3 col-md-3">
+                    <div class="btn btn-danger" id="remove_field">Remove</div>
+                  </div> -->
             </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox"> Check me out
-              </label>
+            </div>
+            <div class="row">
+              <div class="col-xs-4">
+                <div class="btn btn-success" id="add_field">Add Field</div>
+              </div>
             </div>
           </div>
           <!-- /.box-body -->
@@ -57,5 +84,15 @@
   </div>
 
 </section>
+
+<script type="text/javascript">
+ $(document).ready(function(){
+   var i = 0;
+   var field = "<div class='row'><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Field Name' type='text'></div><div class='col-xs-3 col-md-3'><select class='form-control' name='fild_type[]'><option value='type'>Type</option><option value='type2'>Type2</option></select></div><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Label Name' type='text'></div><div class='col-xs-3 col-md-3'><div class='checkbox'><label><input type='checkbox' name='nullable[]'>Nullable</label></div></div></div>"
+    $("#add_field").click(function () {
+        $("#fields").append(field);
+    });
+});
+</script>
 
 @endsection

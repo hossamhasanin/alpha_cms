@@ -30,6 +30,8 @@
   <!-- bootstrap wysihtml5 - text editor -->
   {{ Html::Style("plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css") }}
 
+  {{ Html::Script("plugins/jQuery/jquery-2.2.3.min.js") }}
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -716,7 +718,6 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 2.2.3 -->
-{{ Html::Script("plugins/jQuery/jquery-2.2.3.min.js") }}
 <!-- jQuery UI 1.11.4 -->
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -752,5 +753,15 @@
 {{ Html::Script("/js/pages/dashboard.js") }}
 <!-- AdminLTE for demo purposes -->
 {{ Html::Script("js/demo.js") }}
+
+<script type="text/javascript">
+ $(document).ready(function(){
+   var field = "<div class='row'><div class='row'><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Field Name' type='text'></div><div class='col-xs-3 col-md-3'><select class='form-control' name='fild_type[]'><option value='type'>Type</option><option value='type2'>Type2</option></select></div><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Label Name' type='text'></div><div class='col-xs-3 col-md-3'><div class='checkbox'><label><input type='checkbox' name='nullable[]'>Nullable</label></div></div></div></div>"
+    $("#add_field").click(function () {
+        $("#fields").append(field);
+    });
+});
+</script>
+
 </body>
 </html>
