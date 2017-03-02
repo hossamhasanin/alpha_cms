@@ -20,6 +20,7 @@ class ATables extends Migration
           $table->string("slug");
           $table->string("link_name");
           $table->string("module_name");
+          $table->string("labels_name");
           $table->string("icon");
           $table->timestamps();
       });

@@ -27,7 +27,7 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
         return view("blades.addTable");
       });
 
-      Route::post("/add" , "TableController@AddNew");
+      Route::post("/add" , ["use" => "TableController@AddNew" , "as" => "add"]);
 
 });
 
