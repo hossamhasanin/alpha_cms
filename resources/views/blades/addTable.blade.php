@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-
+<script type="text/javascript">
+  function remove_it(e) {
+    var field_num = $(e).attr("num");
+    $(".field-"+field_num).remove();
+  }
+</script>
 <section class="content">
 
   <div class="row">
@@ -62,9 +67,6 @@
                       </label>
                     </div>
                   </div>
-                  <!-- <div class="col-xs-3 col-md-3">
-                    <div class="btn btn-danger" id="remove_field">Remove</div>
-                  </div> -->
             </div>
             </div>
             <div class="row">
@@ -88,10 +90,13 @@
 <script type="text/javascript">
  $(document).ready(function(){
    var i = 0;
-   var field = "<div class='row'><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Field Name' type='text'></div><div class='col-xs-3 col-md-3'><select class='form-control' name='fild_type[]'><option value='type'>Type</option><option value='type2'>Type2</option></select></div><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Label Name' type='text'></div><div class='col-xs-3 col-md-3'><div class='checkbox'><label><input type='checkbox' name='nullable[]'>Nullable</label></div></div></div>"
+
     $("#add_field").click(function () {
+        i += 1
+        var field = "<div class='row field-"+ i +"'><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Field Name' type='text'></div><div class='col-xs-3 col-md-3'><select class='form-control' name='fild_type[]'><option value='type'>Type</option><option value='type2'>Type2</option></select></div><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Label Name' type='text'></div><div class='col-xs-3 col-md-3'><div class='checkbox'><label><input type='checkbox' name='nullable[]'>Nullable</label></div></div><div class='col-xs-3 col-md-3'><div class='btn btn-danger remove_field' onclick='remove_it(this)' num= "+ i +">Remove</div></div></div>"
         $("#fields").append(field);
     });
+
 });
 </script>
 
