@@ -17,8 +17,17 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->
-        {{ Form::open(["route" => "add"]) }}
+        {{ Form::open(["route" => "add_field"]) }}
           <div class="box-body">
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="form-group">
               <label for="exampleInputEmail1">Table name</label>
               {{ Form::text("table_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
@@ -33,33 +42,35 @@
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">Model name</label>
-              {{ Form::text("model_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Label Names</label>
-              {{ Form::text("labels_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
+              {{ Form::text("module_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">Icon</label>
-              {{ Form::text("icon" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
+              <input class="icp demo form-control" name="icon" type="text">
             </div>
             <hr>
             <div id="fields">
               <div class="row">
 
                   <div class="col-xs-3 col-md-3">
-                    <input class="form-control" placeholder="Field Name" type="text">
+                    <input class="form-control" placeholder="Field Name" name="field_name[]" type="text">
                   </div>
-                  <div class="col-xs-3 col-md-3">
-                    <select class="form-control" name="fild_type[]">
-                        <option value="type">Type</option>
-                        <option value="type2">Type2</option>
+                  <div class="col-xs-2 col-md-2">
+                    <select class="form-control" name="field_type[]">
+                        <option>chose</option>
+                        <option value="float">Float</option>
+                        <option value="dateTime">DateTime</option>
+                        <option value="integer">Integer</option>
+                        <option value="longText">LongText</option>
+                        <option value="mediumText">MediumText</option>
+                        <option value="string">Varchare</option>
+                        <option value="text">Text</option>
                     </select>
                   </div>
                   <div class="col-xs-3 col-md-3">
-                    <input class="form-control" placeholder="Label Name" type="text">
+                    <input class="form-control" placeholder="Label Name" name="label_name[]" type="text">
                   </div>
-                  <div class="col-xs-3 col-md-3">
+                  <div class="col-xs-2 col-md-2">
                     <div class="checkbox">
                       <label>
                         <input type="checkbox" name="nullable[]">
@@ -93,9 +104,11 @@
 
     $("#add_field").click(function () {
         i += 1
-        var field = "<div class='row field-"+ i +"'><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Field Name' type='text'></div><div class='col-xs-3 col-md-3'><select class='form-control' name='fild_type[]'><option value='type'>Type</option><option value='type2'>Type2</option></select></div><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Label Name' type='text'></div><div class='col-xs-3 col-md-3'><div class='checkbox'><label><input type='checkbox' name='nullable[]'>Nullable</label></div></div><div class='col-xs-3 col-md-3'><div class='btn btn-danger remove_field' onclick='remove_it(this)' num= "+ i +">Remove</div></div></div>"
+        var field = "<div class='row field-"+ i +"'><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Field Name' name='field_name["+ i +"]' type='text'></div><div class='col-xs-2 col-md-2'><select class='form-control' name='fild_type["+ i +"]'><option>chose</option><option value='float'>Float</option><option value='dateTime'>DateTime</option><option value='integer'>Integer</option><option value='longText'>LongText</option><option value='mediumText'>MediumText</option><option value='string'>Varchare</option<option value='text'>Text</option></select></div><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Label Name' name='label_name[]' type='text'></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' name='nullable["+ i +"]'>Nullable</label></div></div><div class='col-xs-2 col-md-2'><div class='btn btn-danger remove_field pull-right' onclick='remove_it(this)' num= "+ i +">Remove</div></div></div>"
         $("#fields").append(field);
     });
+
+    $('.demo').iconpicker();
 
 });
 </script>

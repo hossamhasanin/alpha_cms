@@ -8,26 +8,60 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-
+use App\a_Tables;
+use Artisan;
 
 class TableController extends Controller
 {
     public $names;
     public $types;
-    
+    public $nullables;
+
     public function AddNew(Request $request)
     {
 
-      $this->names = $request->name;
-      $this->types = $request->type;
+      $this->validate($request, [
+        'table_name' => 'required|unique:a_tables,table|max:255',
+        'link_name' => 'required|unique:a_tables',
+        'slug' => 'required|unique:a_tables',
+        'module_name' => 'required|unique:a_tables',
+        //'label_name[]' => 'required',
+        'icon' => 'required',
+        //'field_name[]' => 'required',
+        //'field_type[]' => 'required',
+    ]);
 
-        Schema::create('koko', function (Blueprint $table) {
-          foreach ($this->types as $type) {
-              foreach ($this->names as $name) {
+      $a_tables = new a_Tables;
+      $a_tables->table = $request->table_name;
+      $a_tables->link_name = $request->link_name;
+      $a_tables->slug = $request->slug;
+      $a_tables->module_name = $request->module_name;
+      $a_tables->labels_name = implode(",",$request->label_name);
+      $a_tables->icon = $request->icon;
+      $a_tables->save();
+
+      $this->nullables = $request->nullable;
+      $this->names = $request->field_name;
+      $this->types = $request->field_type;
+
+      Artisan::call('make:model', [
+            "name" => $request->module_name
+        ]);
+
+        Schema::create($request->table_name , function (Blueprint $table) {
+          $table->increments('id');
+          foreach ($this->names as $name_id => $name ) {
+                $type = $this->types[$name_id];
+                if ($this->nullables[$name_id]){
+                    $table->$type($name)->nullable();
+                } else {
                     $table->$type($name);
-              }
+                }
           }
+          $table->timestamps();
         });
+
+     //dd($request->nullable);
 
     }
 }

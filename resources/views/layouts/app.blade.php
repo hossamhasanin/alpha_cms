@@ -32,6 +32,8 @@
 
   {{ Html::Script("plugins/jQuery/jquery-2.2.3.min.js") }}
 
+  {{ Html::Style("/css/fontawesome-iconpicker.min.css") }}
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -753,6 +755,8 @@
 {{ Html::Script("/js/pages/dashboard.js") }}
 <!-- AdminLTE for demo purposes -->
 {{ Html::Script("js/demo.js") }}
+
+{{ Html::Script("js/fontawesome-iconpicker.min.js") }}
 
 <script type="text/javascript">
  $(document).ready(function(){

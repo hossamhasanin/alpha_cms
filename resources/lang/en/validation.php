@@ -114,6 +114,13 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+      'table_name' => 'table name',
+      'link_name' => 'link name',
+      'module_name' => 'model name',
+      'label_name[]' => 'label name',
+      'field_name[]' => 'field name',
+      'field_type[]' => 'field type',
+    ],
 
 ];
