@@ -43,6 +43,12 @@ class PagesController extends Controller
 
       }
 
+      public function newData($link)
+      {
+          $a_table = a_Tables::where('slug', $link)->first();
+      }
+
+
 }
 
 

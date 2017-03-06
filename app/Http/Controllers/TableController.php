@@ -37,6 +37,7 @@ class TableController extends Controller
       $a_tables->slug = $request->slug;
       $a_tables->module_name = $request->module_name;
       $a_tables->labels_name = implode(",",$request->label_name);
+      //$a_tables->field_types = implode(",",$request->field_type);
       $a_tables->icon = $request->icon;
       $a_tables->save();
 
