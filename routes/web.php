@@ -40,8 +40,24 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
 Route::get('/test', function()
 {
 
-  Artisan::call('make:model', [
-        "name" => "koko"
-    ]);
+  // Artisan::call('make:model', [
+  //       "name" => "koko"
+  //   ]);
+
+  // $files = file(app_path() . "/a_Tables.php");
+  //
+  // if (in_array("}\n" , $files)){
+  //   echo "Exist";
+  // }
+
+  $m = file_get_contents(app_path() . "/a_Tables.php");
+
+  $m = str_replace("}\n" , "" , $m);
+
+  $h = $m . "koko
+}
+  ";
+
+  file_put_contents(app_path() . "/test.php" , $h);
 
 });

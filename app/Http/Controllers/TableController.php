@@ -25,10 +25,10 @@ class TableController extends Controller
         'link_name' => 'required|unique:a_tables',
         'slug' => 'required|unique:a_tables',
         'module_name' => 'required|unique:a_tables',
-        //'label_name[]' => 'required',
+        'label_name.*' => 'required',
         'icon' => 'required',
-        //'field_name[]' => 'required',
-        //'field_type[]' => 'required',
+        'field_name.*' => 'required',
+        'field_type.*' => 'required',
     ]);
 
       $a_tables = new a_Tables;
@@ -36,8 +36,8 @@ class TableController extends Controller
       $a_tables->link_name = $request->link_name;
       $a_tables->slug = $request->slug;
       $a_tables->module_name = $request->module_name;
-      $a_tables->labels_name = implode(",",$request->label_name);
-      //$a_tables->field_types = implode(",",$request->field_type);
+      $a_tables->labels_name = implode("," ,$request->label_name);
+      $a_tables->field_types = implode("," ,$request->field_type);
       $a_tables->icon = $request->icon;
       $a_tables->save();
 
