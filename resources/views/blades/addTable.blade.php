@@ -9,12 +9,16 @@
   function show_label(s) {
     var vid = $(s).attr("vid");
     if ($(s).is(":checked")){
-        var f_label_name = "<div class='col-xs-3 col-md-3 label-"+ vid +"'><input class='form-control' placeholder='Label Name' name='label_name[]' type='text'></div>"
+        var f_label_name = "<div class='col-xs-2 col-md-2 label-"+ vid +"'><input class='form-control' placeholder='Label Name' name='label_name[]' type='text'></div>"
         $("#show_label-"+vid).append(f_label_name);
     } else {
         $(".label-"+vid).remove();
     }
-  }
+  }/*
+  function remove_relation(re) {
+    var relation_num = $(re).attr("rnum");
+    $(".relation-"+relation_num).remove();
+  }*/
 </script>
 <section class="content">
 
@@ -22,7 +26,7 @@
     <div class="col-md-12">
       <div class="box box-primary">
         <div class="box-header with-border">
-          <h3 class="box-title">Quick Example</h3>
+          <h3 class="box-title">@{{ all_fields }}</h3>
         </div>
         <!-- /.box-header -->
         <!-- form start -->
@@ -61,8 +65,8 @@
             <div id="fields">
               <div class="row">
 
-                  <div class="col-xs-3 col-md-3">
-                    <input class="form-control" placeholder="Field Name" name="field_name[]" type="text">
+                  <div class="col-xs-2 col-md-2">
+                    <input class="form-control f_name-0" placeholder="Field Name" name="field_name[]" type="text">
                   </div>
                   <div class="col-xs-2 col-md-2">
                     <select class="form-control" name="field_type[]">
@@ -76,7 +80,7 @@
                         <option value="text">Text</option>
                     </select>
                   </div>
-                  <div class="col-xs-2 col-md-1">
+                  <div class="col-xs-1 col-md-1">
                     <div class="checkbox">
                       <label>
                         <input type="checkbox" onclick="show_label(this)" id="visible" vid="0" value="0" name="visible[]">
@@ -88,7 +92,7 @@
                   <!-- <div class="col-xs-3 col-md-3">
                     <input class="form-control" placeholder="Label Name" name="label_name[]" type="text">
                   </div> -->
-                  <div class="col-xs-2 col-md-1">
+                  <div class="col-xs-1 col-md-1">
                     <div class="checkbox">
                       <label>
                         <input type="checkbox" name="nullable[]">
@@ -101,6 +105,14 @@
             <div class="row">
               <div class="col-xs-4">
                 <div class="btn btn-success" id="add_field">Add Field</div>
+              </div>
+            </div>
+            <hr>
+            <div class="relations" :is="all_field.component" v-for="all_field in all_fields" v-bind="all_field.props">
+            </div>
+            <div class="row">
+              <div class="col-xs-4">
+                <div class="btn btn-success" @click="add_relation()" id="add_relation">Add relation</div>
               </div>
             </div>
           </div>
@@ -122,9 +134,12 @@
 
     $("#add_field").click(function () {
         i += 1
-        var field = "<div class='row field-"+ i +"'><div class='col-xs-3 col-md-3'><input class='form-control' placeholder='Field Name' name='field_name["+ i +"]' type='text'></div><div class='col-xs-2 col-md-2'><select class='form-control' name='field_type["+ i +"]'><option>chose</option><option value='float'>Float</option><option value='dateTime'>DateTime</option><option value='integer'>Integer</option><option value='longText'>LongText</option><option value='mediumText'>MediumText</option><option value='string'>Varchare</option><option value='text'>Text</option></select></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' vid='"+ i +"' value='"+ i +"' onclick='show_label(this)' name='visible["+ i +"]'>Visible</label></div></div><div id='show_label-"+ i +"'></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' name='nullable["+ i +"]'>Nullable</label></div></div><div class='col-xs-1 col-md-1'><div class='btn btn-danger remove_field pull-right' onclick='remove_it(this)' num= "+ i +">X</div></div></div>"
+        var field = "<div class='row field-"+ i +"'><div class='col-xs-2 col-md-2'><input class='form-control f_name-"+ i +"' placeholder='Field Name' v-model='all_fields' name='field_name["+ i +"]' type='text'></div><div class='col-xs-2 col-md-2'><select class='form-control' name='field_type["+ i +"]'><option>chose</option><option value='float'>Float</option><option value='dateTime'>DateTime</option><option value='integer'>Integer</option><option value='longText'>LongText</option><option value='mediumText'>MediumText</option><option value='string'>Varchare</option><option value='text'>Text</option></select></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' vid='"+ i +"' value='"+ i +"' onclick='show_label(this)' name='visible["+ i +"]'>Visible</label></div></div><div id='show_label-"+ i +"'></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' name='nullable["+ i +"]'>Nullable</label></div></div><div class='col-xs-1 col-md-1'><div class='btn btn-danger remove_field pull-right' onclick='remove_it(this)' num= "+ i +">X</div></div></div>"
         $("#fields").append(field);
     });
+
+    //var k = 0;
+
 
     $('.demo').iconpicker();
 

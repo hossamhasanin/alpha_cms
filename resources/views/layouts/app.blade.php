@@ -511,7 +511,7 @@
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" id="app">
     @yield("content")
   </div>
   <!-- /.content-wrapper -->
@@ -755,6 +755,8 @@
 {{ Html::Script("/js/pages/dashboard.js") }}
 <!-- AdminLTE for demo purposes -->
 {{ Html::Script("js/demo.js") }}
+
+{{ Html::Script("/js/app.js") }}
 
 {{ Html::Script("js/fontawesome-iconpicker.min.js") }}
 

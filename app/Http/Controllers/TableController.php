@@ -62,6 +62,19 @@ class TableController extends Controller
           $table->timestamps();
         });
 
+        $model_file = file_get_contents(app_path() . "/$request->module_name.php");
+
+        $model_file = str_replace("}\n" , "" , $model_file);
+
+        $model_file = $model_file . '
+            public function '.$request->table_name.'(){
+                return $this->belongsTo("App\Phone");
+            }
+      }
+        ';
+
+        file_put_contents(app_path() . "/$request->module_name.php" , $model_file);
+
      //dd($request->nullable);
 
     }
