@@ -47,6 +47,10 @@ Vue.component('add_relation', add_relation)
  		
  		this.order += 1;        
         this.all_fields.push({component: 'add_relation', props: {relation_field: this.field_names , order: this.order}});
+        /*for (var f = 0; f < window.tests.length; f++) {
+        	console.log(window.tests[f].table)
+        }*/
+        //console.log(window.tests)
   	}
   }
 

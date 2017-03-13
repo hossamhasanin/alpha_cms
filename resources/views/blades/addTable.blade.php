@@ -26,7 +26,7 @@
     <div class="col-md-12">
       <div class="box box-primary">
         <div class="box-header with-border">
-          <h3 class="box-title">@{{ all_fields }}</h3>
+          <h3 class="box-title">Add new table</h3>
         </div>
         <!-- /.box-header -->
         <!-- form start -->
@@ -134,7 +134,7 @@
 
     $("#add_field").click(function () {
         i += 1
-        var field = "<div class='row field-"+ i +"'><div class='col-xs-2 col-md-2'><input class='form-control f_name-"+ i +"' placeholder='Field Name' v-model='all_fields' name='field_name["+ i +"]' type='text'></div><div class='col-xs-2 col-md-2'><select class='form-control' name='field_type["+ i +"]'><option>chose</option><option value='float'>Float</option><option value='dateTime'>DateTime</option><option value='integer'>Integer</option><option value='longText'>LongText</option><option value='mediumText'>MediumText</option><option value='string'>Varchare</option><option value='text'>Text</option></select></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' vid='"+ i +"' value='"+ i +"' onclick='show_label(this)' name='visible["+ i +"]'>Visible</label></div></div><div id='show_label-"+ i +"'></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' name='nullable["+ i +"]'>Nullable</label></div></div><div class='col-xs-1 col-md-1'><div class='btn btn-danger remove_field pull-right' onclick='remove_it(this)' num= "+ i +">X</div></div></div>"
+        var field = "<div class='row field-"+ i +"'><div class='col-xs-2 col-md-2'><input class='form-control f_name-"+ i +"' placeholder='Field Name' name='field_name["+ i +"]' type='text'></div><div class='col-xs-2 col-md-2'><select class='form-control' name='field_type["+ i +"]'><option>chose</option><option value='float'>Float</option><option value='dateTime'>DateTime</option><option value='integer'>Integer</option><option value='longText'>LongText</option><option value='mediumText'>MediumText</option><option value='string'>Varchare</option><option value='text'>Text</option></select></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' vid='"+ i +"' value='"+ i +"' onclick='show_label(this)' name='visible["+ i +"]'>Visible</label></div></div><div id='show_label-"+ i +"'></div><div class='col-xs-1 col-md-1'><div class='checkbox'><label><input type='checkbox' name='nullable["+ i +"]'>Nullable</label></div></div><div class='col-xs-1 col-md-1'><div class='btn btn-danger remove_field pull-right' onclick='remove_it(this)' num= "+ i +">X</div></div></div>"
         $("#fields").append(field);
     });
 
@@ -142,7 +142,7 @@
 
 
     $('.demo').iconpicker();
-
+    window.tests = {!! json_encode($all_tables) !!}
 });
 </script>
 

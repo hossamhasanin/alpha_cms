@@ -30,7 +30,8 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
       });
 
       Route::get("/add" , function () {
-        return view("blades.addTable");
+        $tables = \App\a_Tables::get();
+        return view("blades.addTable" , ["all_tables" => $tables]);
       });
 
       Route::post("/add" , "TableController@AddNew")->name("add_field");
