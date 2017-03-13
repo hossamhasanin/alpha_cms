@@ -11166,6 +11166,8 @@ return jQuery;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_add_relation__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_add_relation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_add_relation__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_add_field__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_add_field___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_add_field__);
 
 
 
@@ -11173,6 +11175,10 @@ return jQuery;
 
 // importing custom components
 
+
+
+
+__webpack_require__(49);
 
 // Adding the X-CSRF-Token to all axios request
 __WEBPACK_IMPORTED_MODULE_2_axios___default.a.interceptors.request.use(function (config) {
@@ -11189,6 +11195,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('add_relation', __WEBPACK_IMPORTED_MODULE_4__components_add_relation___default.a);
 
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('add_field', __WEBPACK_IMPORTED_MODULE_5__components_add_field___default.a);
+
 /*var tmp = Vue.extend({ 
     template: '<add_relation></add_relation>'
 })*/
@@ -11197,9 +11205,11 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
   el: '#app',
   data: {
     message: 'Hello World!',
-    all_fields: [],
+    all_relations: [],
     field_names: [],
-    order: 0
+    relation_order: 0,
+    field_order: 0,
+    all_fields: []
   },
   methods: {
     add_relation: function add_relation() {
@@ -11210,12 +11220,16 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         }
       }
 
-      this.order += 1;
-      this.all_fields.push({ component: 'add_relation', props: { relation_field: this.field_names, order: this.order } });
+      this.relation_order += 1;
+      this.all_relations.push({ component: 'add_relation', props: { relation_field: this.field_names, order: this.relation_order } });
       /*for (var f = 0; f < window.tests.length; f++) {
       	console.log(window.tests[f].table)
       }*/
       //console.log(window.tests)
+    },
+    add_field: function add_field() {
+      this.field_order += 1;
+      this.all_fields.push({ component: 'add_field', props: { order: this.field_order } });
     }
   }
 
@@ -12213,16 +12227,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     class: 'row relation-' + _vm.order
   }, [_c('div', {
-    staticClass: "col-xs-2 col-md-2"
-  }, [_c('select', {
+    staticClass: "col-xs-3 col-md-4"
+  }, [_c('label', {
+    attrs: {
+      "for": "exampleInputEmail1"
+    }
+  }, [_vm._v("chose field")]), _vm._v(" "), _c('select', {
     staticClass: "form-control",
     attrs: {
       "id": 'fetch_field-' + _vm.order,
       "name": "relation_fields[]"
     }
   }, [_c('option', [_vm._v("chose")])])]), _vm._v(" "), _c('div', {
-    staticClass: "col-xs-2 col-md-2"
-  }, [_c('select', {
+    staticClass: "col-xs-3 col-md-4"
+  }, [_c('label', {
+    attrs: {
+      "for": "exampleInputEmail1"
+    }
+  }, [_vm._v("chose table")]), _vm._v(" "), _c('select', {
     staticClass: "form-control",
     attrs: {
       "id": 'fetch_table-' + _vm.order,
@@ -12230,8 +12252,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('option', [_vm._v("chose")])])]), _vm._v(" "), _c('div', {
     staticClass: "col-xs-1 col-md-1"
-  }, [_c('div', {
-    staticClass: "btn btn-danger pull-right remove_field",
+  }, [_c('label', {
+    attrs: {
+      "for": "exampleInputEmail1"
+    }
+  }, [_vm._v("Remove")]), _vm._v(" "), _c('div', {
+    staticClass: "btn btn-danger pull-left remove_field",
     on: {
       "click": function($event) {
         _vm.remove_relation('.relation-' + _vm.order)
@@ -23142,6 +23168,211 @@ module.exports = g;
 __webpack_require__(9);
 module.exports = __webpack_require__(10);
 
+
+/***/ }),
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+
+/* harmony default export */ __webpack_exports__["default"] = {
+	props: ["order"],
+	data: function data() {
+		return {};
+	},
+
+	methods: {
+		remove_field: function remove_field(fi) {
+			$(fi).remove();
+		}
+	}
+};
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(8)))
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(32)(
+  /* script */
+  __webpack_require__(46),
+  /* template */
+  __webpack_require__(48),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\xampp\\htdocs\\alpha_cms\\resources\\assets\\js\\components\\add_field.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] add_field.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-109f121c", Component.options)
+  } else {
+    hotAPI.reload("data-v-109f121c", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('tr', {
+    class: 'field-' + _vm.order
+  }, [_c('td', [_c('input', {
+    class: 'form-control f_name-' + _vm.order,
+    attrs: {
+      "placeholder": "Field Name",
+      "name": 'field_name[' + _vm.order + ']',
+      "type": "text"
+    }
+  })]), _vm._v(" "), _c('td', [_c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": 'field_type[' + _vm.order + ']'
+    }
+  }, [_c('option', [_vm._v("chose")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "float"
+    }
+  }, [_vm._v("Float")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "dateTime"
+    }
+  }, [_vm._v("DateTime")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "integer"
+    }
+  }, [_vm._v("Integer")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "longText"
+    }
+  }, [_vm._v("LongText")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "mediumText"
+    }
+  }, [_vm._v("MediumText")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "string"
+    }
+  }, [_vm._v("Varchare")]), _vm._v(" "), _c('option', {
+    attrs: {
+      "value": "text"
+    }
+  }, [_vm._v("Text")])])]), _vm._v(" "), _c('td', [_c('input', {
+    attrs: {
+      "type": "checkbox",
+      "name": 'nullable[' + _vm.order + ']',
+      "data-toggle": "toggle"
+    }
+  })]), _vm._v(" "), _c('td', [_c('input', {
+    staticClass: "form-control d_value-\"+ i +\"",
+    attrs: {
+      "placeholder": "Defualt value",
+      "name": 'defualt_value[' + _vm.order + ']',
+      "type": "text"
+    }
+  })]), _vm._v(" "), _c('td', [_c('div', {
+    staticClass: "btn btn-danger remove_field",
+    attrs: {
+      "num": "+ i +"
+    },
+    on: {
+      "click": function($event) {
+        _vm.remove_field('.field-' + _vm.order)
+      }
+    }
+  }, [_vm._v("X")])])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-109f121c", module.exports)
+  }
+}
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/*! ========================================================================
+ * Bootstrap Toggle: bootstrap-toggle.js v2.2.0
+ * http://www.bootstraptoggle.com
+ * ========================================================================
+ * Copyright 2014 Min Hur, The New York Times Company
+ * Licensed under MIT
+ * ======================================================================== */
++function (a) {
+  "use strict";
+  function b(b) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("bs.toggle"),
+          f = "object" == (typeof b === "undefined" ? "undefined" : _typeof(b)) && b;e || d.data("bs.toggle", e = new c(this, f)), "string" == typeof b && e[b] && e[b]();
+    });
+  }var c = function c(b, _c) {
+    this.$element = a(b), this.options = a.extend({}, this.defaults(), _c), this.render();
+  };c.VERSION = "2.2.0", c.DEFAULTS = { on: "On", off: "Off", onstyle: "primary", offstyle: "default", size: "normal", style: "", width: null, height: null }, c.prototype.defaults = function () {
+    return { on: this.$element.attr("data-on") || c.DEFAULTS.on, off: this.$element.attr("data-off") || c.DEFAULTS.off, onstyle: this.$element.attr("data-onstyle") || c.DEFAULTS.onstyle, offstyle: this.$element.attr("data-offstyle") || c.DEFAULTS.offstyle, size: this.$element.attr("data-size") || c.DEFAULTS.size, style: this.$element.attr("data-style") || c.DEFAULTS.style, width: this.$element.attr("data-width") || c.DEFAULTS.width, height: this.$element.attr("data-height") || c.DEFAULTS.height };
+  }, c.prototype.render = function () {
+    this._onstyle = "btn-" + this.options.onstyle, this._offstyle = "btn-" + this.options.offstyle;var b = "large" === this.options.size ? "btn-lg" : "small" === this.options.size ? "btn-sm" : "mini" === this.options.size ? "btn-xs" : "",
+        c = a('<label class="btn">').html(this.options.on).addClass(this._onstyle + " " + b),
+        d = a('<label class="btn">').html(this.options.off).addClass(this._offstyle + " " + b + " active"),
+        e = a('<span class="toggle-handle btn btn-default">').addClass(b),
+        f = a('<div class="toggle-group">').append(c, d, e),
+        g = a('<div class="toggle btn" data-toggle="toggle">').addClass(this.$element.prop("checked") ? this._onstyle : this._offstyle + " off").addClass(b).addClass(this.options.style);this.$element.wrap(g), a.extend(this, { $toggle: this.$element.parent(), $toggleOn: c, $toggleOff: d, $toggleGroup: f }), this.$toggle.append(f);var h = this.options.width || Math.max(c.outerWidth(), d.outerWidth()) + e.outerWidth() / 2,
+        i = this.options.height || Math.max(c.outerHeight(), d.outerHeight());c.addClass("toggle-on"), d.addClass("toggle-off"), this.$toggle.css({ width: h, height: i }), this.options.height && (c.css("line-height", c.height() + "px"), d.css("line-height", d.height() + "px")), this.update(!0), this.trigger(!0);
+  }, c.prototype.toggle = function () {
+    this.$element.prop("checked") ? this.off() : this.on();
+  }, c.prototype.on = function (a) {
+    return this.$element.prop("disabled") ? !1 : (this.$toggle.removeClass(this._offstyle + " off").addClass(this._onstyle), this.$element.prop("checked", !0), void (a || this.trigger()));
+  }, c.prototype.off = function (a) {
+    return this.$element.prop("disabled") ? !1 : (this.$toggle.removeClass(this._onstyle).addClass(this._offstyle + " off"), this.$element.prop("checked", !1), void (a || this.trigger()));
+  }, c.prototype.enable = function () {
+    this.$toggle.removeAttr("disabled"), this.$element.prop("disabled", !1);
+  }, c.prototype.disable = function () {
+    this.$toggle.attr("disabled", "disabled"), this.$element.prop("disabled", !0);
+  }, c.prototype.update = function (a) {
+    this.$element.prop("disabled") ? this.disable() : this.enable(), this.$element.prop("checked") ? this.on(a) : this.off(a);
+  }, c.prototype.trigger = function (b) {
+    this.$element.off("change.bs.toggle"), b || this.$element.change(), this.$element.on("change.bs.toggle", a.proxy(function () {
+      this.update();
+    }, this));
+  }, c.prototype.destroy = function () {
+    this.$element.off("change.bs.toggle"), this.$toggleGroup.remove(), this.$element.removeData("bs.toggle"), this.$element.unwrap();
+  };var d = a.fn.bootstrapToggle;a.fn.bootstrapToggle = b, a.fn.bootstrapToggle.Constructor = c, a.fn.toggle.noConflict = function () {
+    return a.fn.bootstrapToggle = d, this;
+  }, a(function () {
+    a("input[type=checkbox][data-toggle^=toggle]").bootstrapToggle();
+  }), a(document).on("click.bs.toggle", "div[data-toggle^=toggle]", function (b) {
+    var c = a(this).find("input[type=checkbox]");c.bootstrapToggle("toggle"), b.preventDefault();
+  });
+}(jQuery);
+//# sourceMappingURL=bootstrap-toggle.min.js.map
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ })
 /******/ ]);

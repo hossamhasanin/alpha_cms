@@ -35,18 +35,21 @@
 
 <template>
 	<div v-bind:class="'row relation-' + order">
-		<div class='col-xs-2 col-md-2'>
+		<div class='col-xs-3 col-md-4'>
+			<label for="exampleInputEmail1">chose field</label>
 			<select class='form-control' v-bind:id="'fetch_field-' + order" name='relation_fields[]'>
 				<option>chose</option>
 			</select>
 		</div>
-		<div class='col-xs-2 col-md-2'>
+		<div class='col-xs-3 col-md-4'>
+			<label for="exampleInputEmail1">chose table</label>
 			<select class='form-control' v-bind:id="'fetch_table-' + order"  name='relation_tabels[]'>
 				<option>chose</option>
 			</select>
 		</div>
 		<div class='col-xs-1 col-md-1'>
-			<div class="btn btn-danger pull-right remove_field" @click="remove_relation('.relation-'+order)" >X</div>
+		<label for="exampleInputEmail1">Remove</label>
+			<div class="btn btn-danger pull-left remove_field" @click="remove_relation('.relation-'+order)" >X</div>
 		</div>
 	</div>
 

@@ -21,20 +21,20 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
 
       Route::get('/', 'HomeController@index');
 
-      Route::group(["prefix" => "link"] , function (){
+      Route::group(["prefix" => "table"] , function (){
 
-            Route::get("/{table}" , "PagesController@showAll");
+            Route::get("/add" , function () {
+              $tables = \App\a_Tables::get();
+              return view("blades.addTable" , ["all_tables" => $tables]);
+            });
 
-            Route::get("/add/{table}" , "PagesController@newData");
+            Route::post("/add" , "TableController@AddNew")->name("add_field");
 
       });
 
-      Route::get("/add" , function () {
-        $tables = \App\a_Tables::get();
-        return view("blades.addTable" , ["all_tables" => $tables]);
-      });
+      Route::get("/{table}" , "PagesController@showAll");
 
-      Route::post("/add" , "TableController@AddNew")->name("add_field");
+      Route::get("/add/{table}" , "PagesController@newData");
 
 });
 
