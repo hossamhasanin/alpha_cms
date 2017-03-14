@@ -18,7 +18,7 @@
 <template>
 	<tr v-bind:class="'field-'+ order ">
 		<td>
-		  <input v-bind:class="'form-control f_name-'+ order " placeholder='Field Name' v-bind:name="'field_name['+ order +']'" type='text'>
+		  <input v-bind:class="'form-control f-name f_name-'+ order " placeholder='Field Name' v-bind:name="'field_name['+ order +']'" type='text'>
 		</td>
 		<td>
 		  <select class='form-control' v-bind:name="'field_type['+ order +']'">
@@ -40,10 +40,10 @@
 		  </div>
 		</td>
 		<td>
-			<input class='form-control d_value-"+ i +"' placeholder='Defualt value' v-bind:name="'defualt_value['+ order +']'" type='text'>
+			<input class='form-control d_value-"+ i +"' placeholder='Defualt value' v-bind:name="'default_value['+ order +']'" type='text'>
 		</td>
 		<td>
-			<div class='btn btn-danger remove_field' @click="remove_field('.field-'+order)" num= "+ i +">X</div>
+			<div class='btn btn-danger remove_field' @click="remove_field('.field-'+order)" num= "+ i +"><i class="fa fa-times" aria-hidden="true"></i></div>
 		</td>
 	</tr>
 </template>

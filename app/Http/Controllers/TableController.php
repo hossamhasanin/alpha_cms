@@ -10,6 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 
 use App\a_Tables;
 use Artisan;
+use App\fields;
 
 class TableController extends Controller
 {
@@ -20,6 +21,8 @@ class TableController extends Controller
     public $types;
     // nullables to define if that field accept the null value or not
     public $nullables;
+    //default values of the fields
+    public $default_values;
 
     public function AddNew(Request $request)
     {
@@ -29,7 +32,6 @@ class TableController extends Controller
         'link_name' => 'required|unique:a_tables',
         'slug' => 'required|unique:a_tables',
         'module_name' => 'required|unique:a_tables',
-        'label_name.*' => 'required',
         'icon' => 'required',
         'field_name.*' => 'required',
         'field_type.*' => 'required',
@@ -46,24 +48,31 @@ class TableController extends Controller
       // store the slug that should be url of this table
       $a_tables->slug = $request->slug;
       // store model name in database
-      $a_tables->module_name = $request->module_name;
-      // check if label_name field empty or not not make errors in laravel
-      if (isset($request->label_name)){
-        // store array data in field by implode "," in it to avoid errors
-        $a_tables->labels_name = implode("," ,$request->label_name);
-      }
+      $a_tables->module_name = $request->module_name;     
       // store array data in field by implode "," in it to avoid errors
       $a_tables->field_types = implode("," ,$request->field_type);
       // store the icon that should appear in the slide list in dashboard (I use the icons of font awoesome)
       $a_tables->icon = $request->icon;
       // store array data in field by implode "," in it to avoid errors
-      // define if it is allowed to show this field in add bage in its controller
-      $a_tables->visible_fields = implode(",", $request->visible);
       $a_tables->save();
+
+      foreach ($request->field_name as $name) {
+          // save the data of the field in the fields tabl
+          $fields = new fields;
+          // save the field_name in field name column
+          $fields->field_name = $name;
+          // save the table_name (indicate to the table of this column) in table_name column
+          $fields->table_id = $a_tables->id;
+          // save the default label_name
+          $fields->label_name = $name; 
+          $fields->save();
+      }
+
 
       $this->nullables = $request->nullable;
       $this->names = $request->field_name;
       $this->types = $request->field_type;
+      $this->default_values = $request->default_values;
 
       // Create the new model in App folder from artisan function instead of artisan command
       Artisan::call('make:model', [
@@ -78,16 +87,26 @@ class TableController extends Controller
             //define the type of this field easily
                 $type = $this->types[$name_id];
                 if ($this->nullables[$name_id]){
+                  if ($this->default_values[$name_id]){
+                    $table->$type($name)->nullable()->default($this->default_values[$name_id]);
+                  } else {
                     $table->$type($name)->nullable();
+                  }
                 } else {
+                  if ($this->default_values[$name_id]){
+                    $table->$type($name)->default($this->default_values[$name_id]);
+                  } else {
                     $table->$type($name);
+                  }
                 }
           }
           $table->timestamps();
         });
 
         // modify the two models of relationships parent_model and child model
-        $this->modify_model($request->relation_tabels , $request->relation_fields , $request->table_name , $request->module_name);
+        if ($request->relation_tabels){
+          $this->modify_model($request->relation_tabels , $request->relation_fields , $request->table_name , $request->module_name);
+        }
 
     }
 

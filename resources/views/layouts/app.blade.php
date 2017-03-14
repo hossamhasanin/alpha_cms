@@ -13,6 +13,8 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
+  <link href="https://fonts.googleapis.com/css?family=Mada" rel="stylesheet">
+
   {{ Html::Style("/css/AdminLTE.min.css") }}
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->

@@ -49,7 +49,7 @@
 		</div>
 		<div class='col-xs-1 col-md-1'>
 		<label for="exampleInputEmail1">Remove</label>
-			<div class="btn btn-danger pull-left remove_field" @click="remove_relation('.relation-'+order)" >X</div>
+			<div class="btn btn-danger pull-left remove_field" @click="remove_relation('.relation-'+order)" ><i class="fa fa-times" aria-hidden="true"></i></div>
 		</div>
 	</div>
 

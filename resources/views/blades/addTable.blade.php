@@ -79,7 +79,7 @@
                   <th>Remove</th>
                 </tr>
                 <tr>
-                  <td><input class="form-control f_name-0" placeholder="Field Name" name="field_name[]" type="text"></td>
+                  <td><input class="form-control f-name f_name-0" placeholder="Field Name" name="field_name[]" type="text"></td>
                   <td>
                     <select class="form-control" name="field_type[]">
                         <option>chose</option>
@@ -100,10 +100,10 @@
                     </div>
                   </td>
                   <td>
-                    <input class="form-control d_value-0" placeholder="Defualt value" name="defualt_value[]" type="text">
+                    <input class="form-control d_value-0" placeholder="Defualt value" name="default_value[]" type="text">
                   </td>
                   <td>
-                    <div>انت مينفعش تشيل الحقل الافتراضي</div>  
+                    <h4 class="text-danger" style="font-family: 'Mada', sans-serif;">يا عزيزي لا يجب ازالة هدا الحقل</h4>  
                   </td>
                 </tr>
                 <tr :is="all_field.component" v-for="all_field in all_fields" v-bind="all_field.props">
@@ -120,7 +120,11 @@
               </div>
             </div>
             <hr>
-            <div class="relations" style="margin-bottom: 5px;" :is="all_relations.component" v-for="all_relation in all_relations" v-bind="all_relation.props">
+            <div>
+              <h3>Relationships</h3>
+              <div class="alert alert-info" id="b_mess"><h4>Add new Relationship <strong class="text-danger">Here !</strong></h4></div>
+              <div class="relations" style="margin-bottom: 5px;" :is="all_relation.component" v-for="all_relation in all_relations" v-bind="all_relation.props">
+              </div>
             </div>
             <div class="row">
               <div class="col-xs-4">

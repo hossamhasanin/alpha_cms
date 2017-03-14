@@ -44,7 +44,7 @@ Vue.component('add_field', add_field);
   },
   methods: {
   	add_relation() {
-  		var inputCount = document.getElementById("fields").getElementsByClassName("row").length;
+  		var inputCount = document.getElementById("fields").getElementsByClassName("f-name").length;
   		for (var r = 0; r < inputCount; r++) {
           if (this.field_names.indexOf($(".f_name-"+r).val()) === -1 && $(".f_name-"+r).val() !== ""){
             this.field_names.push($(".f_name-"+r).val())
@@ -53,10 +53,6 @@ Vue.component('add_field', add_field);
  		
  		this.relation_order += 1;        
         this.all_relations.push({component: 'add_relation', props: {relation_field: this.field_names , order: this.relation_order}});
-        /*for (var f = 0; f < window.tests.length; f++) {
-        	console.log(window.tests[f].table)
-        }*/
-        //console.log(window.tests)
   	},
   	add_field() {
   		this.field_order += 1;
