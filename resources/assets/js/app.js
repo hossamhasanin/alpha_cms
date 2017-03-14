@@ -66,4 +66,8 @@ Vue.component('add_field', add_field);
 
 })
 
+	  $(function() {
+    		$('#toggle-one').bootstrapToggle();
+  		})
+
 

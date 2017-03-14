@@ -34,7 +34,7 @@
 
   {{ Html::Style("/css/fontawesome-iconpicker.min.css") }}
 
-  {{ Html::Style("bootstrap/css/bootstrap-toggle.min.css") }}
+  {{ Html::Style("bootstrap/css/titatoggle-dist-min.css") }}
 
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

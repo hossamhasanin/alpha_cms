@@ -33,7 +33,11 @@
 		  </select>
 		</td>
 		<td>
-			<input type='checkbox' v-bind:name="'nullable['+ order +']'" data-toggle='toggle' >
+		  <div class="checkbox checkbox-slider--b checkbox-slider-md">	
+			<label>
+				<input v-bind:name="'nullable['+ order +']'" type="checkbox"><span></span>
+			</label>
+		  </div>
 		</td>
 		<td>
 			<input class='form-control d_value-"+ i +"' placeholder='Defualt value' v-bind:name="'defualt_value['+ order +']'" type='text'>
