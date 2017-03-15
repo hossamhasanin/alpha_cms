@@ -28,8 +28,11 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
               return view("blades.addTable" , ["all_tables" => $tables]);
             });
 
-            Route::post("/add" , "TableController@AddNew")->name("add_field");
+            Route::post("/add" , "TableController@AddNew")->name("add_table");
 
+            Route::get("/option/{table}" , "TableController@AddOption")->name("add_option")->where("table" , "[a-zA-Z]+|[a-zA-Z]+\d+");
+
+            Route::post("/option/{table}" , "TableController@AddNew")->name("store_option")->where("table" , "\d+");
       });
 
       Route::get("/{table}" , "PagesController@showAll");

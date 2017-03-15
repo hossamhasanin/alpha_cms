@@ -11261,7 +11261,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     all_relations: [],
     field_names: [],
     relation_order: 0,
-    field_order: 0,
+    field_order: 1,
     all_fields: []
   },
   methods: {

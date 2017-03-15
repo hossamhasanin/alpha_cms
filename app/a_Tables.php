@@ -11,7 +11,7 @@ class a_Tables extends Model
 
     public function fields()
     {
-        return $this->hasMany("App\fields");
+        return $this->hasMany("App\\fields" , "table_id");
     }
 
 }

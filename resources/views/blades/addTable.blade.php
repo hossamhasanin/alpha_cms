@@ -30,7 +30,7 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->
-        {{ Form::open(["route" => "add_field"]) }}
+        {{ Form::open(["route" => "add_table"]) }}
           <div class="box-body">
             @if (count($errors) > 0)
                 <div class="alert alert-danger">

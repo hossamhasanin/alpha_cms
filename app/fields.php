@@ -8,6 +8,6 @@ class fields extends Model
 {
    	public function a_tables()
    	{
-   		return $this->belongsTo("App\a_Tables");
+   		return $this->belongsTo("App\\a_Tables" , "table_id");
    	}
 }

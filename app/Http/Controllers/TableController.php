@@ -56,13 +56,19 @@ class TableController extends Controller
       // store array data in field by implode "," in it to avoid errors
       $a_tables->save();
 
-      foreach ($request->field_name as $name) {
+      foreach ($request->field_name as $id => $name) {
           // save the data of the field in the fields tabl
           $fields = new fields;
           // save the field_name in field name column
           $fields->field_name = $name;
+          // store the field_type
+          $fields->field_type = $request->field_type[$id];
           // save the table_name (indicate to the table of this column) in table_name column
           $fields->table_id = $a_tables->id;
+          // store if it nullable or nor
+          $fields->field_nullable = isset($request->nullable[$id]) ? 1 : 0;
+          // store the default value of the field
+          $fields->default_value = isset($request->default_values[$id]) ? $request->default_values[$id] : "";
           // save the default label_name
           $fields->label_name = $name; 
           $fields->save();
@@ -153,4 +159,14 @@ class TableController extends Controller
             }
         }
     }
+
+    public function AddOption($table){
+        $fields_data = a_Tables::where("slug" , $table)->first()->fields()->get();
+
+        $table_id = a_Tables::where("slug" , $table)->first()->id;
+
+        return view("blades.addOption" , ["fields_data" => $fields_data , "table_id" => $table_id]);
+
+    }
+
 }

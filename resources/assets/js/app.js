@@ -39,7 +39,7 @@ Vue.component('add_field', add_field);
     all_relations: [],
     field_names: [],
     relation_order: 0,
-    field_order: 0,
+    field_order: 1,
     all_fields: []
   },
   methods: {
