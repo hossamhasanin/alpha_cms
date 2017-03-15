@@ -57,13 +57,15 @@ Vue.component('add_field', add_field);
   	add_field() {
   		this.field_order += 1;
         this.all_fields.push({component: 'add_field', props: {order: this.field_order}});
+  	},
+  	chose_all(ord){
+        //document.getElementsByClassName("v_check-"+ord).checked = true;
+        //console.log($(".v_check-1").checked = true)
+        $(".v_check-"+ord).prop('checked', $("#check_all-"+ord).prop("checked"));
   	}
   }
 
 })
 
-	  $(function() {
-    		$('#toggle-one').bootstrapToggle();
-  		})
 
 

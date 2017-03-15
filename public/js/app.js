@@ -11279,13 +11279,14 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     add_field: function add_field() {
       this.field_order += 1;
       this.all_fields.push({ component: 'add_field', props: { order: this.field_order } });
+    },
+    chose_all: function chose_all(ord) {
+      //document.getElementsByClassName("v_check-"+ord).checked = true;
+      //console.log($(".v_check-1").checked = true)
+      $(".v_check-" + ord).prop('checked', $("#check_all-" + ord).prop("checked"));
     }
   }
 
-});
-
-$(function () {
-  $('#toggle-one').bootstrapToggle();
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
