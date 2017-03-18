@@ -42,25 +42,27 @@
                                         </label>
                                     </div>
                                 </td>
-                                  <td>
+                                  <td class="checks">
+                                  <input type="hidden" name="visibility[{{ $field_data->id }}]" id="send_c_value-{{ $field_data->id }}" value="{!! $field_data->visibility == 'all' ? 'show,add,edit' : $field_data->visibility !!}">
                                       <div>
                                           <label>
-                                              <input type="checkbox" @change="chose_all({{ $field_data->id }})" id="check_all-{{ $field_data->id }}" ><span> All</span>
+                                              <input type="checkbox"  @change="chose_all({{ $field_data->id }})" id="check_all-{{ $field_data->id }}" 
+                                              {!! strpos($field_data->visibility , "all") !== false ? "checked" : "" !!} ><span> All</span>
                                           </label>
                                       </div>
                                       <div>
                                           <label>
-                                              <input type="checkbox" class="v_check-{{ $field_data->id }}" value="show"><span> show page</span>
+                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'show')" name="visibility[{{ $field_data->id }}]" class="v_check-{{ $field_data->id }} v_check_show-{{ $field_data->id }}" value="show"><span> show page</span>
                                           </label>
                                       </div>
                                       <div>
                                           <label>
-                                              <input type="checkbox" class="v_check-{{ $field_data->id }}" value="add"><span> add page</span>
+                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'add')" name="visibility[{{ $field_data->id }}]" class="v_check-{{ $field_data->id }} v_check_add-{{ $field_data->id }}" value="add"><span> add page</span>
                                           </label>
                                       </div>
                                       <div>
                                           <label>
-                                              <input type="checkbox" class="v_check-{{ $field_data->id }}" value="edit"><span> edit page</span>
+                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'edit')" name="visibility[{{ $field_data->id }}]"  class="v_check-{{ $field_data->id }} v_check_edit-{{ $field_data->id }}" value="edit"><span> edit page</span>
                                           </label>
                                       </div>
                                   </td>
@@ -80,5 +82,4 @@
             </div>
         </div>
     </section>
-
 @endsection
