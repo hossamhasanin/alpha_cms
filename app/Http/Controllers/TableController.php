@@ -169,4 +169,25 @@ class TableController extends Controller
 
     }
 
+    public function StoreOption($table_id , Request $request){
+        $table_fields = fields::where("table_id" , $table_id)->get();
+        foreach ($request->ids as $field_id) {
+            $requested_field = fields::find($field_id);
+            $requested_field->field_name = $request->field_name[$field_id];
+            $requested_field->table_id = $table_id;
+            $requested_field->field_type = $request->field_type[$field_id];
+            $requested_field->visibility = $request->visibility[$field_id];
+            $requested_field->field_nullable = $request->nullable[$field_id];
+            $requested_field->default_value = $request->default_value[$field_id];
+            $requested_field->label_name = $request->field_name[$field_id];
+            $requested_field->save();
+        }
+        /*
+            Schema::table('users', function ($table) {
+                $table->integer('active')->default(0)->change();
+            });
+
+         */
+       // dd($request);
+    }
 }

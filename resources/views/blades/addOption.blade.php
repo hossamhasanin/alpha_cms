@@ -10,6 +10,7 @@
                         <h3 class="box-title">Add options</h3>
                     </div>
                     <!-- /.box-header -->
+                    {{ Form::open(["route" => ["store_option" , $table_id]])  }}
                     <div class="box-body">
                         <table class="table table-bordered" id="fields">
                             <tr>
@@ -19,9 +20,9 @@
                                 <th>Visibility</th>
                                 <th>Default value</th>
                             </tr>
-                            {{ Form::open(["route" => ["store_option" , $table_id]])  }}
                              @foreach($fields_data as $field_data)
                               <tr>
+                                  <input type="hidden" name="ids[{{ $field_data->id }}]" value="{{ $field_data->id }}">
                                 <td><input class="form-control f-name f_name-0" value="{{ $field_data->field_name  }}" placeholder="Field Name" name="field_name[{{ $field_data->id }}]" type="text"></td>
                                 <td>
                                     <select class="form-control" name="field_type[{{ $field_data->id }}]">
@@ -38,7 +39,7 @@
                                 <td>
                                     <div class="checkbox checkbox-slider--b checkbox-slider-md">
                                         <label>
-                                            <input name="nullable[{{ $field_data->id }}]" {!! $field_data->field_nullable == 1 ? "checked" : "" !!} type="checkbox"><span></span>
+                                            <input name="nullable[{{ $field_data->id }}]" {!! $field_data->field_nullable == 1 ? "checked" : "" !!} type="checkbox" value="1"><span></span>
                                         </label>
                                     </div>
                                 </td>
@@ -46,23 +47,23 @@
                                   <input type="hidden" name="visibility[{{ $field_data->id }}]" id="send_c_value-{{ $field_data->id }}" value="{!! $field_data->visibility == 'all' ? 'show,add,edit' : $field_data->visibility !!}">
                                       <div>
                                           <label>
-                                              <input type="checkbox"  @change="chose_all({{ $field_data->id }})" id="check_all-{{ $field_data->id }}" 
-                                              {!! strpos($field_data->visibility , "all") !== false ? "checked" : "" !!} ><span> All</span>
+                                              <input type="checkbox"  @change="chose_all({{ $field_data->id }})" id="check_all-{{ $field_data->id }}"
+                                              {!! strpos($field_data->visibility , "show") !== false && strpos($field_data->visibility , "add") !== false && strpos($field_data->visibility , "edit") !== false ? "checked" : "" !!} ><span> All</span>
                                           </label>
                                       </div>
                                       <div>
                                           <label>
-                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'show')" name="visibility[{{ $field_data->id }}]" class="v_check-{{ $field_data->id }} v_check_show-{{ $field_data->id }}" value="show"><span> show page</span>
+                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'show')" class="v_check-{{ $field_data->id }} v_check_show-{{ $field_data->id }}" value="show"><span> show page</span>
                                           </label>
                                       </div>
                                       <div>
                                           <label>
-                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'add')" name="visibility[{{ $field_data->id }}]" class="v_check-{{ $field_data->id }} v_check_add-{{ $field_data->id }}" value="add"><span> add page</span>
+                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'add')" class="v_check-{{ $field_data->id }} v_check_add-{{ $field_data->id }}" value="add"><span> add page</span>
                                           </label>
                                       </div>
                                       <div>
                                           <label>
-                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'edit')" name="visibility[{{ $field_data->id }}]"  class="v_check-{{ $field_data->id }} v_check_edit-{{ $field_data->id }}" value="edit"><span> edit page</span>
+                                              <input type="checkbox" @change="send_v_checks({{ $field_data->id }} , 'edit')" class="v_check-{{ $field_data->id }} v_check_edit-{{ $field_data->id }}" value="edit"><span> edit page</span>
                                           </label>
                                       </div>
                                   </td>
@@ -71,14 +72,14 @@
                                 </td>
                             </tr>
                             @endforeach
-                        </table>                            
+                        </table>
                     </div>
                     <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    {{ Form::close() }}
                 </div>
-                  <div class="box-footer">
-                    {{ Form::submit("Save" , ["class" => "btn btn-primary"]) }}
-                  </div>
-                 {{ Form::close() }}
             </div>
         </div>
     </section>
