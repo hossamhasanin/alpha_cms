@@ -12,6 +12,15 @@
                     <!-- /.box-header -->
                     {{ Form::open(["route" => ["store_option" , $table_id]])  }}
                     <div class="box-body">
+                        @if (count($errors) > 0)
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <table class="table table-bordered" id="fields">
                             <tr>
                                 <th>Field name</th>
@@ -19,6 +28,7 @@
                                 <th style="width: 40px">Nullable</th>
                                 <th>Visibility</th>
                                 <th>Default value</th>
+                                <th>Label name</th>
                             </tr>
                              @foreach($fields_data as $field_data)
                               <tr>
@@ -69,6 +79,9 @@
                                   </td>
                                 <td>
                                     <input class="form-control d_value-0" placeholder="Defualt value" value="{{ $field_data->default_value  }}" name="default_value[{{ $field_data->id }}]" type="text">
+                                </td>
+                                <td>
+                                    <input class="form-control d_value-0" placeholder="Label name" value="{{ $field_data->label_name  }}" name="label_name[{{ $field_data->id }}]" type="text">
                                 </td>
                             </tr>
                             @endforeach

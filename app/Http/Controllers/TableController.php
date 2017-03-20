@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Validation\Factory;
+use Validator;
+use Illuminate\Validation\Rule;
 
 use App\a_Tables;
 use Artisan;
@@ -169,8 +172,32 @@ class TableController extends Controller
 
     }
 
+    public $option_ids;
+    public $option_name;
+    public $option_type;
+    public $option_default_value;
+
     public function StoreOption($table_id , Request $request){
-        $table_fields = fields::where("table_id" , $table_id)->get();
+
+        $table_name = a_Tables::find($table_id)->table;
+
+        $this->validate($request , [
+            'field_name.*' => "required",
+            'ids.*' => "required|numeric",
+            'field_type.*' => "required|alpha",
+            'visibility.*' => "required|alpha",
+            'default_value.*' => "alpha",
+            'label_name.*' => "required|alpha",
+        ]);
+
+        foreach (array_count_values($request->field_name) as $names){
+            if ($names > 1){
+                return redirect("dashboard/table/option/tester")->withErrors("There is fields repeated");
+                die();
+            }
+        }
+
+        //$table_fields = fields::where("table_id" , $table_id)->get();
         foreach ($request->ids as $field_id) {
             $requested_field = fields::find($field_id);
             $requested_field->field_name = $request->field_name[$field_id];
@@ -179,15 +206,24 @@ class TableController extends Controller
             $requested_field->visibility = $request->visibility[$field_id];
             $requested_field->field_nullable = $request->nullable[$field_id];
             $requested_field->default_value = $request->default_value[$field_id];
-            $requested_field->label_name = $request->field_name[$field_id];
+            $requested_field->label_name = $request->label_name[$field_id];
             $requested_field->save();
         }
-        /*
-            Schema::table('users', function ($table) {
-                $table->integer('active')->default(0)->change();
-            });
 
-         */
-       // dd($request);
+        $this->option_ids = $request->ids;
+        $this->option_name = $request->field_name;
+        $this->option_type = $request->field_type;
+        $this->option_default_value = $request->default_value;
+
+        if (Schema::hasTable($table_name)) {
+            Schema::table($table_name, function ($table) {
+                foreach ($this->option_ids as $option_id) {
+                    $option_name = $this->option_name[$option_id];
+                    $option_type = $this->option_type[$option_id];
+                    $option_default_value = $this->option_default_value[$option_id];
+                    $table->$option_type($option_name)->default($option_default_value)->change();
+                }
+            });
+        }
     }
 }

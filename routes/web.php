@@ -53,7 +53,7 @@ Route::get('/test', function()
   // if (in_array("}\n" , $files)){
   //   echo "Exist";
   // }
-
+/*
   $m = file_get_contents(app_path() . "/a_Tables.php");
 
   $m = str_replace("}\n" , "" , $m);
@@ -63,5 +63,18 @@ Route::get('/test', function()
   ";
 
   file_put_contents(app_path() . "/test.php" , $h);
+*/
+
+
+
+$tr = ["1" => "test" , "2" => "test" , "3" => "sldkfs" , "4" => "lsdkfds"];
+
+foreach (array_count_values($tr) as $v){
+    if ($v < 2){
+        echo "allow";
+    }
+}
+
+
 
 });
