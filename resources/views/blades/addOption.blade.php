@@ -21,6 +21,11 @@
                                 </ul>
                             </div>
                         @endif
+                        @if(session()->has('add_option'))
+                            <div class="alert alert-success">
+                                <h4>{{ session()->get('add_option') }}</h4>
+                            </div>
+                        @endif
                         <table class="table table-bordered" id="fields">
                             <tr>
                                 <th>Field name</th>
@@ -32,17 +37,17 @@
                             </tr>
                              @foreach($fields_data as $field_data)
                               <tr>
-                                  <input type="hidden" name="ids[{{ $field_data->id }}]" value="{{ $field_data->id }}">
+                                  <input type="hidden" name="ids[{{ $field_data->id }}]" value="{{ $field_data->id }}" class="ids">
                                 <td><input class="form-control f-name f_name-0" value="{{ $field_data->field_name  }}" placeholder="Field Name" name="field_name[{{ $field_data->id }}]" type="text"></td>
                                 <td>
                                     <select class="form-control" name="field_type[{{ $field_data->id }}]">
                                         <option>chose</option>
                                         <option value="float" {!! $field_data->field_type == "float" ? "selected" : "" !!}>Float</option>
                                         <option value="dateTime" {!! $field_data->field_type == "dateTime" ? "selected" : "" !!}>DateTime</option>
-                                        <option value="integer" {!! $field_data->field_type == "integer" ? "selected" : "" !!}>Integer</option>
+                                        <option value="int(11)" {!! $field_data->field_type == "int(11)" ? "selected" : "" !!}>Integer</option>
                                         <option value="longText" {!! $field_data->field_type == "longText" ? "selected" : "" !!}>LongText</option>
                                         <option value="mediumText" {!! $field_data->field_type == "mediumText" ? "selected" : "" !!}>MediumText</option>
-                                        <option value="string" {!! $field_data->field_type == "string" ? "selected" : "" !!}>Varchare</option>
+                                        <option value="varchar(255)" {!! $field_data->field_type == "varchar(255)" ? "selected" : "" !!}>Varchare</option>
                                         <option value="text" {!! $field_data->field_type == "text" ? "selected" : "" !!}>Text</option>
                                     </select>
                                 </td>

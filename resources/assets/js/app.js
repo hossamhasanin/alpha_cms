@@ -77,10 +77,11 @@ Vue.component('add_field', add_field);
   	},
     check_exist(){
         var checkers = document.getElementsByClassName("checks").length;
-        for (var c = 0; c <= checkers; c++) {
-            if ($("#check_all-"+c).prop("checked")) {
-                $(".v_check-"+c).prop('checked', $("#check_all-"+c).prop("checked"));
-                document.getElementById("send_c_value-"+c). value = "show,add,edit,"
+        var get_current_id = document.getElementsByClassName("ids");
+        for (var c = 0; c < checkers; c++) {
+            if ($("#check_all-"+get_current_id[c].value).prop("checked")) {
+                $(".v_check-"+get_current_id[c].value).prop('checked', $("#check_all-"+get_current_id[c].value).prop("checked"));
+                document.getElementById("send_c_value-"+get_current_id[c].value).value = "show,add,edit,"
             }
         }
     },

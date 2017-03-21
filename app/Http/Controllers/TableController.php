@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Validation\Factory;
+use Mockery\CountValidator\Exception;
 use Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 use App\a_Tables;
 use Artisan;
@@ -176,6 +178,7 @@ class TableController extends Controller
     public $option_name;
     public $option_type;
     public $option_default_value;
+    public $old_vals;
 
     public function StoreOption($table_id , Request $request){
 
@@ -184,10 +187,9 @@ class TableController extends Controller
         $this->validate($request , [
             'field_name.*' => "required",
             'ids.*' => "required|numeric",
-            'field_type.*' => "required|alpha",
-            'visibility.*' => "required|alpha",
-            'default_value.*' => "alpha",
-            'label_name.*' => "required|alpha",
+            'field_type.*' => "required",
+            'visibility.*' => "required",
+            'label_name.*' => "required",
         ]);
 
         foreach (array_count_values($request->field_name) as $names){
@@ -197,6 +199,25 @@ class TableController extends Controller
             }
         }
 
+        $get_old_vals = fields::where("table_id" , $table_id)->get();
+
+        foreach ($get_old_vals as $old_val){
+            $new_name = $request->field_name[$old_val->id];
+            $new_type = $request->field_type[$old_val->id];
+            $new_nullable = isset($request->nullable[$old_val->id]) ? "NULL" : "NOT NULL";
+            $new_default_value = isset($request->default_value[$old_val->id]) && ($new_type == "varchar(255)" or $new_type == "int(11)") ? "DEFAULT " . "'" .$request->default_value[$old_val->id] . "'" : "DEFAULT NULL";
+            if ($new_name != $old_val->field_name or $new_type != $old_val->field_type or $new_nullable != $old_val->nullable or $new_default_value != $old_val->default_value){
+                // ALTER TABLE `tester` CHANGE `lljjllj` `lljjllj` LONGTEXT NULL DEFAULT NULL;
+                try{
+                    DB::statement("ALTER TABLE $table_name CHANGE $old_val->field_name $new_name $new_type $new_nullable $new_default_value;");
+                }catch (Exception $e){
+                    echo "OHHHHH ! Sorry but i think there big problem in database";
+                }
+                    //DB::statement("ALTER TABLE tester CHANGE dsfsdf hihihi text NULL DEFAULT weuhiwf");
+            }
+        }
+
+
         //$table_fields = fields::where("table_id" , $table_id)->get();
         foreach ($request->ids as $field_id) {
             $requested_field = fields::find($field_id);
@@ -204,26 +225,19 @@ class TableController extends Controller
             $requested_field->table_id = $table_id;
             $requested_field->field_type = $request->field_type[$field_id];
             $requested_field->visibility = $request->visibility[$field_id];
-            $requested_field->field_nullable = $request->nullable[$field_id];
-            $requested_field->default_value = $request->default_value[$field_id];
+            $requested_field->field_nullable = isset($request->nullable[$field_id]) ? $request->nullable[$field_id] : 0;
+            if ($request->field_type[$field_id] == "varchar(255)" or $request->field_type[$field_id] == "int(11)" or $request->field_type[$field_id] == "float"){
+                $requested_field->default_value = $request->default_value[$field_id];
+            }
             $requested_field->label_name = $request->label_name[$field_id];
             $requested_field->save();
         }
 
-        $this->option_ids = $request->ids;
-        $this->option_name = $request->field_name;
-        $this->option_type = $request->field_type;
-        $this->option_default_value = $request->default_value;
+        $request->session()->flash('add_option', 'you added this options successfully!');
 
-        if (Schema::hasTable($table_name)) {
-            Schema::table($table_name, function ($table) {
-                foreach ($this->option_ids as $option_id) {
-                    $option_name = $this->option_name[$option_id];
-                    $option_type = $this->option_type[$option_id];
-                    $option_default_value = $this->option_default_value[$option_id];
-                    $table->$option_type($option_name)->default($option_default_value)->change();
-                }
-            });
-        }
+
+        return redirect()->back();
+
+
     }
 }
