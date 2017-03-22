@@ -35,6 +35,8 @@ Route::group(["prefix" => "dashboard"] , function (){
             Route::post("/option/{table_id}" , "TableController@StoreOption")->name("store_option")->where("table_id" , "\d+");
       });
 
+      Route::get("/tables/" , "TableController@ShowAll")->name("show_all");
+
       Route::get("/{table}" , "PagesController@showAll");
 
       Route::get("/add/{table}" , "PagesController@newData");

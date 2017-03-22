@@ -174,12 +174,6 @@ class TableController extends Controller
 
     }
 
-    public $option_ids;
-    public $option_name;
-    public $option_type;
-    public $option_default_value;
-    public $old_vals;
-
     public function StoreOption($table_id , Request $request){
 
         $table_name = a_Tables::find($table_id)->table;
@@ -240,4 +234,11 @@ class TableController extends Controller
 
 
     }
+
+    public function ShowAll(){
+        $all_tables = a_Tables::get();
+
+        return view("blades.AllTables" , ["all_tables" => $all_tables]);
+    }
+
 }
