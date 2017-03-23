@@ -241,4 +241,12 @@ class TableController extends Controller
         return view("blades.AllTables" , ["all_tables" => $all_tables]);
     }
 
+    public function EditTable($table){
+        $table_data = a_Tables::where("slug" , $table)->first()->fields()->get();
+
+        $table_id = a_Tables::where("slug" , $table)->first()->id;
+
+        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id]);
+    }
+
 }

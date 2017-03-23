@@ -11263,7 +11263,8 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     relation_order: 0,
     field_order: 1,
     all_fields: [],
-    send_checks: []
+    send_checks: [],
+    deleted_field: null
   },
   methods: {
     add_relation: function add_relation() {
@@ -11329,6 +11330,15 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
           $("#check_all-" + order).prop("checked", false);
         }
       }
+    },
+    delete_field: function delete_field(id) {
+      var _this = this;
+
+      $("#edit_field-" + id).remove();
+      this.$http.post("/api/v1/delete_field", { id: id }).then(function (response) {
+        console.log("response", response.data);
+        _this.deleted_field = response.data;
+      });
     }
   },
   mounted: function mounted() {

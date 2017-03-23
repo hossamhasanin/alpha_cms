@@ -41,7 +41,8 @@ Vue.component('add_field', add_field);
     relation_order: 0,
     field_order: 1,
     all_fields: [],
-    send_checks: []
+    send_checks: [],
+    deleted_field: null
   },
   methods: {
   	add_relation() {
@@ -106,6 +107,15 @@ Vue.component('add_field', add_field);
         }
       }
     },
+
+    delete_field(id){
+        $("#edit_field-"+id).remove();
+        this.$http.post("/api/v1/delete_field" , {id: id}).then(response => {
+            console.log("response" , response.data);
+            this.deleted_field = response.data;
+        });
+    }
+
   },
   mounted (){
     this.check_exist();

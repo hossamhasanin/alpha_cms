@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::group(["prefix" => "dashboard"] , function (){
+Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
 
       Route::get('/', 'HomeController@index');
 
@@ -33,6 +33,8 @@ Route::group(["prefix" => "dashboard"] , function (){
             Route::get("/option/{table}" , "TableController@AddOption")->name("add_option")->where("table" , "[a-zA-Z]+|[a-zA-Z]+\d+");
 
             Route::post("/option/{table_id}" , "TableController@StoreOption")->name("store_option")->where("table_id" , "\d+");
+
+            Route::get("/edit/{table}" , "TableController@EditTable")->name("edit_table")->where("table" , "[a-zA-Z]+|[a-zA-Z]+\d+");
       });
 
       Route::get("/tables/" , "TableController@ShowAll")->name("show_all");
