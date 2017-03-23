@@ -11235,8 +11235,8 @@ __webpack_require__(32);
 
 // Adding the X-CSRF-Token to all axios request
 __WEBPACK_IMPORTED_MODULE_2_axios___default.a.interceptors.request.use(function (config) {
-  config.headers['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
-  return config;
+    config.headers['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
+    return config;
 });
 
 // Making axios available as $http 
@@ -11250,100 +11250,134 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('add_relation', __WEBPACK_
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('add_field', __WEBPACK_IMPORTED_MODULE_5__components_add_field___default.a);
 
+var back_again = [];
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("old_field", {
+    template: '<tr v-bind:class="\'old_field-\' + old_field.id">\n                    <td>{{ old_field.name }}</td>\n                    <td>{{ old_field.type }}</td>\n                    <td>{{ old_field.nullable }}</td>\n                    <td>{{ old_field.visibility }}</td>\n                    <td>{{ old_field.default_value }}</td>\n                    <td>{{ old_field.label_name }}</td>\n                    <td><div class="btn btn-danger" v-on:click="remove_old(old_field.id)">Remove</div></td>\n               </tr>',
+    props: ["old_field"],
+    methods: {
+        remove_old: function remove_old(id) {
+            $(".old_field-" + id).remove();
+        }
+    }
+});
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("noti_undo", {
+    template: '<div v-bind:class="\'alert alert-info deleted_field-\' + deleted_field.id"><h4 style="font-family: Mada, sans-serif" class="text-center">\u0627\u0633\u062A\u0639\u062F \u0627\u0644\u062D\u0642\u0644 \u0645\u062C\u062F\u062F\u0627 \u0645\u0646 \u0647\u0646\u0627 <span v-on:click="field_undo(deleted_field)" style="cursor: pointer;" class="text-warning"> \u0647\u0646\u0627 </span></h4></div>',
+    props: ["deleted_field"],
+    data: function data() {
+        return {
+            delete_fields: [],
+            collapsed: false
+        };
+    },
+
+    methods: {
+        field_undo: function field_undo(deleted_field) {
+            back_again.push({ component: "old_field", props: { old_field: deleted_field } });
+            $(".deleted_field-" + deleted_field.id).remove();
+            this.collapsed = true;
+        }
+    }
+});
+
 /*var tmp = Vue.extend({ 
     template: '<add_relation></add_relation>'
 })*/
 
 new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
-  el: '#app',
-  data: {
-    message: 'Hello World!',
-    all_relations: [],
-    field_names: [],
-    relation_order: 0,
-    field_order: 1,
-    all_fields: [],
-    send_checks: [],
-    deleted_field: null
-  },
-  methods: {
-    add_relation: function add_relation() {
-      var inputCount = document.getElementById("fields").getElementsByClassName("f-name").length;
-      for (var r = 0; r < inputCount; r++) {
-        if (this.field_names.indexOf($(".f_name-" + r).val()) === -1 && $(".f_name-" + r).val() !== "") {
-          this.field_names.push($(".f_name-" + r).val());
+    el: '#app',
+    data: {
+        message: 'Hello World!',
+        all_relations: [],
+        field_names: [],
+        relation_order: 0,
+        field_order: 1,
+        all_fields: [],
+        send_checks: [],
+        deleted_field: null,
+        noti_undo: [],
+        back_again: back_again
+    },
+    methods: {
+        add_relation: function add_relation() {
+            var inputCount = document.getElementById("fields").getElementsByClassName("f-name").length;
+            for (var r = 0; r < inputCount; r++) {
+                if (this.field_names.indexOf($(".f_name-" + r).val()) === -1 && $(".f_name-" + r).val() !== "") {
+                    this.field_names.push($(".f_name-" + r).val());
+                }
+            }
+
+            this.relation_order += 1;
+            this.all_relations.push({ component: 'add_relation', props: { relation_field: this.field_names, order: this.relation_order } });
+        },
+        add_field: function add_field() {
+            this.field_order += 1;
+            this.all_fields.push({ component: 'add_field', props: { order: this.field_order } });
+        },
+
+
+        // put the chosen values in the field that will send to the controller to store in database
+        // .v_check represent fields that refer to visibility the values of it (show , add , edit)
+        // #check_all is check box to check all the check box
+        // #send_c_value-(order) that refer to the hidden input that will send to store it in database
+        // .v_check_(val)-(order) that class have been created to use it to detect which input choosed (show or add or , edit)
+
+        chose_all: function chose_all(ord) {
+            //document.getElementsByClassName("v_check-"+ord).checked = true;
+            //console.log($(".v_check-1").checked = true)
+            $(".v_check-" + ord).prop('checked', $("#check_all-" + ord).prop("checked"));
+            document.getElementById("send_c_value-" + ord).value = "show,add,edit,";
+            if (!$("#check_all-" + ord).prop("checked")) {
+                document.getElementById("send_c_value-" + ord).value = "";
+            }
+        },
+        check_exist: function check_exist() {
+            var checkers = document.getElementsByClassName("checks").length;
+            var get_current_id = document.getElementsByClassName("ids");
+            for (var c = 0; c < checkers; c++) {
+                if ($("#check_all-" + get_current_id[c].value).prop("checked")) {
+                    $(".v_check-" + get_current_id[c].value).prop('checked', $("#check_all-" + get_current_id[c].value).prop("checked"));
+                    document.getElementById("send_c_value-" + get_current_id[c].value).value = "show,add,edit,";
+                }
+            }
+        },
+
+        // put the chosen values in the field that will send to the controller to store in database
+        // .v_check represent fields that refer to visibility the values of it (show , add , edit)
+        // #check_all is check box to check all the check box
+        // #send_c_value-(order) that refer to the hidden input that will send to store it in database
+        // .v_check_(val)-(order) that class have been created to use it to detect which input choosed (show or add or , edit)
+        send_v_checks: function send_v_checks(order, val) {
+            var chosed_allready = document.getElementById("send_c_value-" + order).value;
+            if ($(".v_check_" + val + "-" + order).prop("checked") && chosed_allready.search(val) == -1) {
+                document.getElementById("send_c_value-" + order).value += val + ",";
+                if (document.getElementById("send_c_value-" + order).value.search("add") > -1 && document.getElementById("send_c_value-" + order).value.search("edit") > -1 && document.getElementById("send_c_value-" + order).value.search("show") > -1) {
+                    $("#check_all-" + order).prop("checked", true);
+                }
+            }
+            if (!$(".v_check_" + val + "-" + order).prop("checked")) {
+                var new_value = document.getElementById("send_c_value-" + order).value.replace(val + ",", '');
+                document.getElementById("send_c_value-" + order).value = new_value;
+                if (document.getElementById("send_c_value-" + order).value == "") {
+                    $("#check_all-" + order).prop("checked", false);
+                }
+            }
+        },
+        delete_field: function delete_field(id) {
+            var _this = this;
+
+            $("#edit_field-" + id).remove();
+            this.$http.post("/api/v1/delete_field", { id: id }).then(function (response) {
+                _this.deleted_field = response.data;
+                console.log(_this.deleted_field);
+                _this.noti_undo.push({ component: "noti_undo", props: { deleted_field: _this.deleted_field } });
+            });
         }
-      }
-
-      this.relation_order += 1;
-      this.all_relations.push({ component: 'add_relation', props: { relation_field: this.field_names, order: this.relation_order } });
     },
-    add_field: function add_field() {
-      this.field_order += 1;
-      this.all_fields.push({ component: 'add_field', props: { order: this.field_order } });
-    },
-
-
-    // put the chosen values in the field that will send to the controller to store in database
-    // .v_check represent fields that refer to visibility the values of it (show , add , edit)
-    // #check_all is check box to check all the check box
-    // #send_c_value-(order) that refer to the hidden input that will send to store it in database
-    // .v_check_(val)-(order) that class have been created to use it to detect which input choosed (show or add or , edit)
-
-    chose_all: function chose_all(ord) {
-      //document.getElementsByClassName("v_check-"+ord).checked = true;
-      //console.log($(".v_check-1").checked = true)
-      $(".v_check-" + ord).prop('checked', $("#check_all-" + ord).prop("checked"));
-      document.getElementById("send_c_value-" + ord).value = "show,add,edit,";
-      if (!$("#check_all-" + ord).prop("checked")) {
-        document.getElementById("send_c_value-" + ord).value = "";
-      }
-    },
-    check_exist: function check_exist() {
-      var checkers = document.getElementsByClassName("checks").length;
-      var get_current_id = document.getElementsByClassName("ids");
-      for (var c = 0; c < checkers; c++) {
-        if ($("#check_all-" + get_current_id[c].value).prop("checked")) {
-          $(".v_check-" + get_current_id[c].value).prop('checked', $("#check_all-" + get_current_id[c].value).prop("checked"));
-          document.getElementById("send_c_value-" + get_current_id[c].value).value = "show,add,edit,";
-        }
-      }
-    },
-
-    // put the chosen values in the field that will send to the controller to store in database
-    // .v_check represent fields that refer to visibility the values of it (show , add , edit)
-    // #check_all is check box to check all the check box
-    // #send_c_value-(order) that refer to the hidden input that will send to store it in database
-    // .v_check_(val)-(order) that class have been created to use it to detect which input choosed (show or add or , edit)
-    send_v_checks: function send_v_checks(order, val) {
-      var chosed_allready = document.getElementById("send_c_value-" + order).value;
-      if ($(".v_check_" + val + "-" + order).prop("checked") && chosed_allready.search(val) == -1) {
-        document.getElementById("send_c_value-" + order).value += val + ",";
-        if (document.getElementById("send_c_value-" + order).value.search("add") > -1 && document.getElementById("send_c_value-" + order).value.search("edit") > -1 && document.getElementById("send_c_value-" + order).value.search("show") > -1) {
-          $("#check_all-" + order).prop("checked", true);
-        }
-      }
-      if (!$(".v_check_" + val + "-" + order).prop("checked")) {
-        var new_value = document.getElementById("send_c_value-" + order).value.replace(val + ",", '');
-        document.getElementById("send_c_value-" + order).value = new_value;
-        if (document.getElementById("send_c_value-" + order).value == "") {
-          $("#check_all-" + order).prop("checked", false);
-        }
-      }
-    },
-    delete_field: function delete_field(id) {
-      var _this = this;
-
-      $("#edit_field-" + id).remove();
-      this.$http.post("/api/v1/delete_field", { id: id }).then(function (response) {
-        console.log("response", response.data);
-        _this.deleted_field = response.data;
-      });
+    mounted: function mounted() {
+        this.check_exist();
     }
-  },
-  mounted: function mounted() {
-    this.check_exist();
-  }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 

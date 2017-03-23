@@ -27,6 +27,46 @@ Vue.component('add_relation', add_relation);
 
 Vue.component('add_field', add_field);
 
+var back_again = [];
+
+Vue.component("old_field" , {
+    template: `<tr v-bind:class="'old_field-' + old_field.id">
+                    <td>{{ old_field.name }}</td>
+                    <td>{{ old_field.type }}</td>
+                    <td>{{ old_field.nullable }}</td>
+                    <td>{{ old_field.visibility }}</td>
+                    <td>{{ old_field.default_value }}</td>
+                    <td>{{ old_field.label_name }}</td>
+                    <td><div class="btn btn-danger" v-on:click="remove_old(old_field.id)">Remove</div></td>
+               </tr>`,
+    props: ["old_field"],
+    methods:{
+        remove_old(id){
+            $(".old_field-"+id).remove();
+        }
+    }
+});
+
+Vue.component("noti_undo" , {
+    template: `<div v-bind:class="'alert alert-info deleted_field-' + deleted_field.id"><h4 style="font-family: Mada, sans-serif" class="text-center">استعد الحقل مجددا من هنا <span v-on:click="field_undo(deleted_field)" style="cursor: pointer;" class="text-warning"> هنا </span></h4></div>`,
+    props: ["deleted_field"],
+    data () {
+      return {
+          delete_fields: [],
+          collapsed: false
+      }
+    },
+    methods: {
+        field_undo(deleted_field){
+            back_again.push({component: "old_field" , props: {old_field: deleted_field}});
+            $(".deleted_field-"+deleted_field.id).remove();
+            this.collapsed = true;
+        }
+    }
+});
+
+
+
 /*var tmp = Vue.extend({ 
     template: '<add_relation></add_relation>'
 })*/
@@ -42,7 +82,9 @@ Vue.component('add_field', add_field);
     field_order: 1,
     all_fields: [],
     send_checks: [],
-    deleted_field: null
+    deleted_field: null,
+    noti_undo: [],
+    back_again: back_again
   },
   methods: {
   	add_relation() {
@@ -111,8 +153,9 @@ Vue.component('add_field', add_field);
     delete_field(id){
         $("#edit_field-"+id).remove();
         this.$http.post("/api/v1/delete_field" , {id: id}).then(response => {
-            console.log("response" , response.data);
             this.deleted_field = response.data;
+            console.log(this.deleted_field);
+            this.noti_undo.push({component: "noti_undo" , props: {deleted_field: this.deleted_field}});
         });
     }
 

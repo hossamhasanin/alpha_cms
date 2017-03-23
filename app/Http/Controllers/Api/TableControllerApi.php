@@ -19,6 +19,7 @@ class TableControllerApi extends Controller
 {
     public function DeleteField(Request $request){
         $field = fields::find($request->id);
+        $id = $field->id;
         $name = $field->field_name;
         $type = $field->field_type;
         $nullable = $field->nullable;
@@ -26,7 +27,7 @@ class TableControllerApi extends Controller
         $default_value = $field->default_value;
         $label_name = $field->label_name;
         //$field->delete();
-        return response(["name" => $name , "type" => $type , "nullable" => $nullable , "visibility" => $visibility , "default_value" => $default_value , "label_name" => $label_name] , 200);
+        return response(["id" => $id,"name" => $name , "type" => $type , "nullable" => $nullable , "visibility" => $visibility , "default_value" => $default_value , "label_name" => $label_name] , 200);
     }
 
 }

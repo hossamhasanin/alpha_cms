@@ -94,7 +94,9 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            <tr :is="back_ag.component" v-for="back_ag in back_again" v-bind="back_ag.props"></tr>
                         </table>
+                            <div :is="undo.component" v-for="undo in noti_undo" v-bind="undo.props"></div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
