@@ -36,19 +36,19 @@
 <template>
 	<div v-bind:class="'row relation-' + order">
 		<div class='col-xs-3 col-md-4'>
-			<label for="exampleInputEmail1">chose field</label>
-			<select class='form-control' v-bind:id="'fetch_field-' + order" name='relation_fields[]'>
+			<label>chose field</label>
+			<select class='form-control' v-bind:id="'fetch_field-' + order" v-bind:name="'relation_fields['+ order +']'">
 				<option>chose</option>
 			</select>
 		</div>
 		<div class='col-xs-3 col-md-4'>
-			<label for="exampleInputEmail1">chose table</label>
-			<select class='form-control' v-bind:id="'fetch_table-' + order"  name='relation_tabels[]'>
+			<label>chose table</label>
+			<select class='form-control' v-bind:id="'fetch_table-' + order"  name="'relation_tabels['+ order +']'">
 				<option>chose</option>
 			</select>
 		</div>
 		<div class='col-xs-1 col-md-1'>
-		<label for="exampleInputEmail1">Remove</label>
+		<label>Remove</label>
 			<div class="btn btn-danger pull-left remove_field" @click="remove_relation('.relation-'+order)" ><i class="fa fa-times" aria-hidden="true"></i></div>
 		</div>
 	</div>

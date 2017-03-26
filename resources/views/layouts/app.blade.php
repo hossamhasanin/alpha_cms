@@ -7,8 +7,8 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
-  {{ Html::Style("bootstrap/css/bootstrap.min.css") }}
-  <!-- Font Awesome -->
+  {{ Html::Style("bootstrap/css/bootstrap.css") }}
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
@@ -37,6 +37,7 @@
   {{ Html::Style("/css/fontawesome-iconpicker.min.css") }}
 
   {{ Html::Style("bootstrap/css/titatoggle-dist-min.css") }}
+
 
   <script>
     window.Laravel = {csrfToken: '{{ csrf_token() }}' }
@@ -735,7 +736,7 @@
   $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.6 -->
-{{ Html::Script("bootstrap/js/bootstrap.min.js") }}
+{{ Html::Script("bootstrap/js/bootstrap.js") }}
 <!-- Morris.js charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 {{ Html::Script("plugins/morris/morris.min.js") }}
@@ -775,7 +776,4 @@
         $("#fields").append(field);
     });
 });
-</script>
-
-</body>
-</html>
+</sc

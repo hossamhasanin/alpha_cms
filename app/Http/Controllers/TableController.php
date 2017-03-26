@@ -56,6 +56,8 @@ class TableController extends Controller
       $a_tables->module_name = $request->module_name;     
       // store array data in field by implode "," in it to avoid errors
       $a_tables->field_types = implode("," ,$request->field_type);
+      // store the tables of the relationships
+      $a_tables->relationships = implode("," , $request->relation_tabels);
       // store the icon that should appear in the slide list in dashboard (I use the icons of font awoesome)
       $a_tables->icon = $request->icon;
       // store array data in field by implode "," in it to avoid errors
@@ -74,6 +76,11 @@ class TableController extends Controller
           $fields->field_nullable = isset($request->nullable[$id]) ? 1 : 0;
           // store the default value of the field
           $fields->default_value = isset($request->default_values[$id]) ? $request->default_values[$id] : "";
+          foreach ($request->relation_fields as $i => $field) {
+              if ($field == $name) {
+                  $fields->relation_field = $request->relation_tabels[$i];
+              }
+          }
           // save the default label_name
           $fields->label_name = $name; 
           $fields->save();
@@ -246,7 +253,9 @@ class TableController extends Controller
 
         $table_id = a_Tables::where("slug" , $table)->first()->id;
 
-        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id]);
+        $all_tables = a_Tables::pluck("table");
+
+        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables]);
     }
 
 }

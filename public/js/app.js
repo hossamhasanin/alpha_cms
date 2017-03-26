@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 41);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,7 +73,7 @@
 "use strict";
 
 
-var bind = __webpack_require__(8);
+var bind = __webpack_require__(9);
 
 /*global toString:true*/
 
@@ -10810,10 +10810,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(5);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(5);
   }
   return adapter;
 }
@@ -10888,6 +10888,59 @@ module.exports = defaults;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = options.computed || (options.computed = {})
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10898,7 +10951,7 @@ var settle = __webpack_require__(19);
 var buildURL = __webpack_require__(22);
 var parseHeaders = __webpack_require__(28);
 var isURLSameOrigin = __webpack_require__(26);
-var createError = __webpack_require__(7);
+var createError = __webpack_require__(8);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(21);
 
 module.exports = function xhrAdapter(config) {
@@ -11072,7 +11125,7 @@ module.exports = function xhrAdapter(config) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11098,7 +11151,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11110,7 +11163,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11134,7 +11187,7 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11152,75 +11205,24 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  scopeId,
-  cssModules
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  // inject cssModules
-  if (cssModules) {
-    var computed = options.computed || (options.computed = {})
-    Object.keys(cssModules).forEach(function (key) {
-      var module = cssModules[key]
-      computed[key] = function () { return module }
-    })
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_axios__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_axios__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_add_relation__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_add_relation__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_add_relation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_add_relation__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_add_field__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_add_field__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_add_field___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_add_field__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_edit_relation__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_edit_relation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_edit_relation__);
 
 
 
@@ -11231,7 +11233,9 @@ module.exports = function normalizeComponent (
 
 
 
-__webpack_require__(32);
+
+
+__webpack_require__(33);
 
 // Adding the X-CSRF-Token to all axios request
 __WEBPACK_IMPORTED_MODULE_2_axios___default.a.interceptors.request.use(function (config) {
@@ -11250,20 +11254,57 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('add_relation', __WEBPACK_
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('add_field', __WEBPACK_IMPORTED_MODULE_5__components_add_field___default.a);
 
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('edit_relation', __WEBPACK_IMPORTED_MODULE_6__components_edit_relation___default.a);
+
 var back_again = [];
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("old_field", {
-    template: '<tr v-bind:class="\'old_field-\' + old_field.id">\n                    <td>{{ old_field.name }}</td>\n                    <td>{{ old_field.type }}</td>\n                    <td>{{ old_field.nullable }}</td>\n                    <td>{{ old_field.visibility }}</td>\n                    <td>{{ old_field.default_value }}</td>\n                    <td>{{ old_field.label_name }}</td>\n                    <td><div class="btn btn-danger" v-on:click="remove_old(old_field.id)">Remove</div></td>\n               </tr>',
+    template: '<tr v-bind:class="\'old_field-\' + old_field.id">\n                    <td><input type="text" class="form-control" v-bind:name="\'field_name[\'+ old_field.id +\']\'" v-bind:value="old_field.name"></td>\n                    <td>\n                        <select v-bind:name="\'field_type[\'+ old_field.id +\']\'" class="form-control">\n                            <option v-for="field_type in field_types" :value="field_type" :selected="field_type == old_field.type ? true : false">{{ field_type == "varchar(255)" ? "varchar" : field_type == "int(11)" ? "int" : field_type }}</option>\n                        </select>\n                    </td>\n                    <td>\n                    <div class="checkbox checkbox-slider--b checkbox-slider-md">\n                       <label>\n                        <input type="checkbox" v-bind:name="\'nullable[\'+ old_field.id +\']\'" :checked="old_field.nullable == 1 ? true : false" value="1"><span></span>\n                       </label>\n                    </div>\n                    </td>\n                    <td>\n                        <input type="hidden" v-bind:name="\'visibility[\'+ old_field.visibility +\']\'" v-bind:id="\'send_c_value-\'+old_field.id" v-bind:value="old_field.visibility">\n                              <div>\n                                 <label>\n                                   <input type="checkbox"  @change="check_all(old_field.id)" v-bind:class="\'check_all-\'+old_field.id" ><span> All</span>\n                                 </label>\n                              </div>\n                                 <div>\n                                   <label>\n                                       <input type="checkbox" @change="send_v_checks(old_field.id , \'show\')" v-bind:class="\'check_this-\'+old_field.id + \' check_show-\'+old_field.id" value="show"><span> show page</span>\n                                   </label>\n                                 </div>\n                                 <div>\n                                   <label>\n                                       <input type="checkbox" @change="send_v_checks(old_field.id , \'add\')" v-bind:class="\'check_this-\'+old_field.id + \' check_add-\'+old_field.id" value="add"><span> add page</span>\n                                   </label>\n                                 </div>\n                                 <div>\n                                    <label>\n                                        <input type="checkbox" @change="send_v_checks(old_field.id , \'edit\')" v-bind:class="\'check_this-\'+ old_field.id + \' check_edit-\'+old_field.id" value="edit"><span> edit page</span>\n                                    </label>\n                                 </div>\n                    </td>\n                    <td>{{ old_field.default_value }}</td>\n                    <td>{{ old_field.label_name }}</td>\n                    <td><div class="btn btn-danger" v-on:click="remove_old(old_field.id)">Remove</div></td>\n               </tr>',
     props: ["old_field"],
+    data: function data() {
+        return {
+            field_types: ["float", "dateTime", "int(11)", "longText", "mediumText", "varchar(255)", "text"]
+        };
+    },
+
     methods: {
         remove_old: function remove_old(id) {
             $(".old_field-" + id).remove();
+        },
+        check_all: function check_all(id) {
+            $(".check_this-" + id).prop('checked', $(".check_all-" + id).prop("checked"));
+            document.getElementById("send_c_value-" + id).value = "show,add,edit,";
+            if (!$(".check_all-" + id).prop("checked")) {
+                document.getElementById("send_c_value-" + id).value = "";
+            }
+        },
+        check_exist: function check_exist(field) {
+            if (field.visibility.search("show") > -1 && field.visibility.search("edit") > -1 && field.visibility.search("add") > -1) {
+                $(".check_all-" + field.id).prop("checked", true);
+                //$(".check_this-"+id).prop('checked', true);
+                document.getElementById("send_c_value-" + id).value = "show,add,edit,";
+            }
+            if (field.visibility.search("show") > -1) {
+                $(".check_show-" + field.id).prop("checked", true);
+                document.getElementById("send_c_value-" + id).value += "show,";
+            }
+            if (field.visibility.search("edit") > -1) {
+                $(".check_edit-" + field.id).prop("checked", true);
+                document.getElementById("send_c_value-" + id).value += "edit,";
+            }
+            if (field.visibility.search("add") > -1) {
+                $(".check_add-" + field.id).prop("checked", true);
+                document.getElementById("send_c_value-" + id).value += "add,,";
+            }
         }
+    },
+    mounted: function mounted() {
+        this.check_exist(this.old_field);
     }
 });
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("noti_undo", {
-    template: '<div v-bind:class="\'alert alert-info deleted_field-\' + deleted_field.id"><h4 style="font-family: Mada, sans-serif" class="text-center">\u0627\u0633\u062A\u0639\u062F \u0627\u0644\u062D\u0642\u0644 \u0645\u062C\u062F\u062F\u0627 \u0645\u0646 \u0647\u0646\u0627 <span v-on:click="field_undo(deleted_field)" style="cursor: pointer;" class="text-warning"> \u0647\u0646\u0627 </span></h4></div>',
+    template: '<div v-bind:class="\'alert alert-info deleted_field-\' + deleted_field.id"><h4 style="font-family: Mada, sans-serif" class="text-center">\u0627\u0633\u062A\u0639\u062F \u0627\u0644\u062D\u0642\u0644 \u0645\u062C\u062F\u062F\u0627 \u0645\u0646 <span v-on:click="field_undo(deleted_field)" style="cursor: pointer;" class="text-warning"> \u0647\u0646\u0627 </span></h4></div>',
     props: ["deleted_field"],
     data: function data() {
         return {
@@ -11291,6 +11332,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         message: 'Hello World!',
         all_relations: [],
         field_names: [],
+        field_ids: [],
         relation_order: 0,
         field_order: 1,
         all_fields: [],
@@ -11305,6 +11347,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             for (var r = 0; r < inputCount; r++) {
                 if (this.field_names.indexOf($(".f_name-" + r).val()) === -1 && $(".f_name-" + r).val() !== "") {
                     this.field_names.push($(".f_name-" + r).val());
+                    this.field_ids.push();
                 }
             }
 
@@ -11372,6 +11415,9 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 _this.deleted_field = response.data;
                 console.log(_this.deleted_field);
                 _this.noti_undo.push({ component: "noti_undo", props: { deleted_field: _this.deleted_field } });
+                setTimeout(function () {
+                    $('.deleted_field-' + id).fadeOut();
+                }, 7000);
             });
         }
     },
@@ -11401,7 +11447,7 @@ module.exports = __webpack_require__(13);
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(8);
+var bind = __webpack_require__(9);
 var Axios = __webpack_require__(15);
 var defaults = __webpack_require__(3);
 
@@ -11436,9 +11482,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(5);
+axios.Cancel = __webpack_require__(6);
 axios.CancelToken = __webpack_require__(14);
-axios.isCancel = __webpack_require__(6);
+axios.isCancel = __webpack_require__(7);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -11459,7 +11505,7 @@ module.exports.default = axios;
 "use strict";
 
 
-var Cancel = __webpack_require__(5);
+var Cancel = __webpack_require__(6);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -11676,7 +11722,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(20);
-var isCancel = __webpack_require__(6);
+var isCancel = __webpack_require__(7);
 var defaults = __webpack_require__(3);
 
 /**
@@ -11786,7 +11832,7 @@ module.exports = function enhanceError(error, config, code, response) {
 "use strict";
 
 
-var createError = __webpack_require__(7);
+var createError = __webpack_require__(8);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -12292,6 +12338,31 @@ module.exports = function spread(callback) {
 
 /***/ }),
 /* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    props: ["field", "all_tables", "ids", "relation_table", "table_id"],
+    data: function data() {
+        return {
+            //relationships: this.relationships,
+            //field: this.field
+        };
+    },
+
+    methods: {
+        remove_relation: function remove_relation(e) {
+            $(".r_" + $(e).attr("_r")).remove();
+        }
+    }
+};
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
+
+/***/ }),
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -12353,7 +12424,7 @@ module.exports = function spread(callback) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12361,14 +12432,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof="fun
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):window.Vue&&window.axios&&Vue.use(o,window.axios)}();
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(9)(
+var Component = __webpack_require__(4)(
   /* script */
   __webpack_require__(30),
   /* template */
-  __webpack_require__(36),
+  __webpack_require__(38),
   /* scopeId */
   null,
   /* cssModules */
@@ -12395,14 +12466,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(9)(
+var Component = __webpack_require__(4)(
   /* script */
   __webpack_require__(31),
   /* template */
-  __webpack_require__(37),
+  __webpack_require__(40),
   /* scopeId */
   null,
   /* cssModules */
@@ -12429,7 +12500,41 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 36 */
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(4)(
+  /* script */
+  __webpack_require__(32),
+  /* template */
+  __webpack_require__(39),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "C:\\xampp\\htdocs\\alpha_cms\\resources\\assets\\js\\components\\edit_relation.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] edit_relation.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-36ee775e", Component.options)
+  } else {
+    hotAPI.reload("data-v-36ee775e", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12515,7 +12620,70 @@ if (false) {
 }
 
 /***/ }),
-/* 37 */
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    class: 'box box-primary r_' + _vm.ids
+  }, [_c('div', {
+    staticClass: "box-header"
+  }, [_c('h3', {
+    staticClass: "box-title"
+  }, [_vm._v("Relationship with : " + _vm._s(_vm.relation_table))])]), _vm._v(" "), _c('div', {
+    staticClass: "box-body"
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-3"
+  }, [_c('label', {
+    attrs: {
+      "for": "field"
+    }
+  }, [_vm._v("field name")]), _vm._v(" "), _c('div', {
+    staticClass: "form-control"
+  }, [_vm._v(_vm._s(_vm.field))])]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-3"
+  }, [_c('label', {
+    attrs: {
+      "for": "tables"
+    }
+  }, [_vm._v("relationship to the table")]), _vm._v(" "), _c('select', {
+    staticClass: "form-control",
+    attrs: {
+      "name": 'relationship[' + _vm.ids + ']'
+    }
+  }, _vm._l((_vm.all_tables), function(relationship) {
+    return _c('option', {
+      domProps: {
+        "value": relationship,
+        "selected": _vm.relation_table == relationship ? true : false
+      }
+    }, [_vm._v(_vm._s(relationship))])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-3"
+  }, [_c('div', {
+    staticClass: "btn btn-danger",
+    attrs: {
+      "_r": _vm.ids
+    },
+    on: {
+      "click": function($event) {
+        _vm.remove_relation($event.target)
+      }
+    }
+  }, [_vm._v("Delete")])])])])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-36ee775e", module.exports)
+  }
+}
+
+/***/ }),
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -12523,35 +12691,23 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: 'row relation-' + _vm.order
   }, [_c('div', {
     staticClass: "col-xs-3 col-md-4"
-  }, [_c('label', {
-    attrs: {
-      "for": "exampleInputEmail1"
-    }
-  }, [_vm._v("chose field")]), _vm._v(" "), _c('select', {
+  }, [_c('label', [_vm._v("chose field")]), _vm._v(" "), _c('select', {
     staticClass: "form-control",
     attrs: {
       "id": 'fetch_field-' + _vm.order,
-      "name": "relation_fields[]"
+      "name": 'relation_fields[' + _vm.order + ']'
     }
   }, [_c('option', [_vm._v("chose")])])]), _vm._v(" "), _c('div', {
     staticClass: "col-xs-3 col-md-4"
-  }, [_c('label', {
-    attrs: {
-      "for": "exampleInputEmail1"
-    }
-  }, [_vm._v("chose table")]), _vm._v(" "), _c('select', {
+  }, [_c('label', [_vm._v("chose table")]), _vm._v(" "), _c('select', {
     staticClass: "form-control",
     attrs: {
       "id": 'fetch_table-' + _vm.order,
-      "name": "relation_tabels[]"
+      "name": "'relation_tabels['+ order +']'"
     }
   }, [_c('option', [_vm._v("chose")])])]), _vm._v(" "), _c('div', {
     staticClass: "col-xs-1 col-md-1"
-  }, [_c('label', {
-    attrs: {
-      "for": "exampleInputEmail1"
-    }
-  }, [_vm._v("Remove")]), _vm._v(" "), _c('div', {
+  }, [_c('label', [_vm._v("Remove")]), _vm._v(" "), _c('div', {
     staticClass: "btn btn-danger pull-left remove_field",
     on: {
       "click": function($event) {
@@ -12574,7 +12730,7 @@ if (false) {
 }
 
 /***/ }),
-/* 38 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14859,7 +15015,7 @@ if (inBrowser && window.Vue) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 39 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23432,10 +23588,10 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(40)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(43)))
 
 /***/ }),
-/* 40 */
+/* 43 */
 /***/ (function(module, exports) {
 
 var g;
@@ -23462,7 +23618,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 41 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(10);

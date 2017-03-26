@@ -70,14 +70,27 @@ Route::get('/test', function()
 */
 
 
-
+/*
 $tr = ["1" => "test" , "2" => "test" , "3" => "sldkfs" , "4" => "lsdkfds"];
 
 foreach (array_count_values($tr) as $v){
     if ($v < 2){
         echo "allow";
     }
-}
+}*/
+
+    //$app_child_model = "'App\\$parent_model'";
+    $table = "tester";
+    $child_model_edit = '/public\s*function\s*'. $table .'\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\(.*\);\s*\n*\}/';
+
+    $parent_model_edit = '/public\s*function\s*users\s*\(\)\s*\n*\{\s*\n*return\s+\$this->hasMany\(.*\);\s*\n*\}/';
+    // get the child model content
+    $child_model_file = file_get_contents(app_path() . "/User.php");
+
+
+    $child_model_file = preg_replace($child_model_edit , "" , $child_model_file);
+
+    file_put_contents(app_path() . "/User.php" , $child_model_file);
 
 
 

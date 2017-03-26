@@ -42,24 +42,24 @@
                 </div>
             @endif
             <div class="form-group">
-              <label for="exampleInputEmail1">Table name</label>
+              <label>Table name</label>
               {{ Form::text("table_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Link name</label>
+              <label>Link name</label>
               {{ Form::text("link_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Slug name</label>
+              <label>Slug name</label>
               {{ Form::text("slug" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Model name</label>
+              <label>Model name</label>
               {{ Form::text("module_name" , "" , ["class" => "form-control" , "placeholder" => "Table name"]) }}
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Icon</label>
-              <input class="icp demo form-control" name="icon" type="text">
+              <label>Icon</label>
+              <input class="icp demor form-control" name="icon" type="text">
             </div>
             <hr>
               <div class="row">
@@ -157,8 +157,8 @@
     //var k = 0;
 
 
-    $('.demo').iconpicker();
-    window.tests = {!! json_encode($all_tables) !!}
+    $('.demor').iconpicker();
+    //window.tests = {!! json_encode($all_tables) !!}
 });
 </script>
 

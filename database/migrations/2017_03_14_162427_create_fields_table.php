@@ -19,9 +19,10 @@ class CreateFieldsTable extends Migration
             $table->integer('table_id');
             $table->string('field_type');
             // check if the laravel created the defualt value in database
-            $table->string("visibility")->defualt("all");
+            $table->string("visibility")->defualt("show,add,edit,");
             $table->integer('field_nullable');
             $table->integer('default_value');
+            $table->string('relation_table')->nullable();
             $table->string("label_name");
             $table->timestamps();
         });

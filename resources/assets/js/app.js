@@ -8,6 +8,8 @@ import add_relation from './components/add_relation';
 
 import add_field from './components/add_field';
 
+import edit_relation from './components/edit_relation';
+
 require("./bootstrap-toggle.min.js");
 
 // Adding the X-CSRF-Token to all axios request
@@ -27,28 +29,96 @@ Vue.component('add_relation', add_relation);
 
 Vue.component('add_field', add_field);
 
+Vue.component('edit_relation', edit_relation);
+
 var back_again = [];
 
 Vue.component("old_field" , {
     template: `<tr v-bind:class="'old_field-' + old_field.id">
-                    <td>{{ old_field.name }}</td>
-                    <td>{{ old_field.type }}</td>
-                    <td>{{ old_field.nullable }}</td>
-                    <td>{{ old_field.visibility }}</td>
+                    <td><input type="text" class="form-control" v-bind:name="'field_name['+ old_field.id +']'" v-bind:value="old_field.name"></td>
+                    <td>
+                        <select v-bind:name="'field_type['+ old_field.id +']'" class="form-control">
+                            <option v-for="field_type in field_types" :value="field_type" :selected="field_type == old_field.type ? true : false">{{ field_type == "varchar(255)" ? "varchar" : field_type == "int(11)" ? "int" : field_type }}</option>
+                        </select>
+                    </td>
+                    <td>
+                    <div class="checkbox checkbox-slider--b checkbox-slider-md">
+                       <label>
+                        <input type="checkbox" v-bind:name="'nullable['+ old_field.id +']'" :checked="old_field.nullable == 1 ? true : false" value="1"><span></span>
+                       </label>
+                    </div>
+                    </td>
+                    <td>
+                        <input type="hidden" v-bind:name="'visibility['+ old_field.visibility +']'" v-bind:id="'send_c_value-'+old_field.id" v-bind:value="old_field.visibility">
+                              <div>
+                                 <label>
+                                   <input type="checkbox"  @change="check_all(old_field.id)" v-bind:class="'check_all-'+old_field.id" ><span> All</span>
+                                 </label>
+                              </div>
+                                 <div>
+                                   <label>
+                                       <input type="checkbox" @change="send_v_checks(old_field.id , 'show')" v-bind:class="'check_this-'+old_field.id + ' check_show-'+old_field.id" value="show"><span> show page</span>
+                                   </label>
+                                 </div>
+                                 <div>
+                                   <label>
+                                       <input type="checkbox" @change="send_v_checks(old_field.id , 'add')" v-bind:class="'check_this-'+old_field.id + ' check_add-'+old_field.id" value="add"><span> add page</span>
+                                   </label>
+                                 </div>
+                                 <div>
+                                    <label>
+                                        <input type="checkbox" @change="send_v_checks(old_field.id , 'edit')" v-bind:class="'check_this-'+ old_field.id + ' check_edit-'+old_field.id" value="edit"><span> edit page</span>
+                                    </label>
+                                 </div>
+                    </td>
                     <td>{{ old_field.default_value }}</td>
                     <td>{{ old_field.label_name }}</td>
                     <td><div class="btn btn-danger" v-on:click="remove_old(old_field.id)">Remove</div></td>
                </tr>`,
     props: ["old_field"],
+    data() {
+      return{
+          field_types: ["float" , "dateTime" , "int(11)" , "longText" , "mediumText" , "varchar(255)" , "text"]
+      }
+    },
     methods:{
         remove_old(id){
             $(".old_field-"+id).remove();
+        },
+        check_all(id){
+            $(".check_this-"+id).prop('checked', $(".check_all-"+id).prop("checked"));
+            document.getElementById("send_c_value-"+id).value = "show,add,edit,";
+            if (!$(".check_all-"+id).prop("checked")){
+                document.getElementById("send_c_value-"+id).value = "";
+            }
+        },
+        check_exist(field){
+            if (field.visibility.search("show") > -1 && field.visibility.search("edit") > -1 && field.visibility.search("add") > -1){
+                $(".check_all-"+field.id).prop("checked" , true);
+                //$(".check_this-"+id).prop('checked', true);
+                document.getElementById("send_c_value-"+id).value = "show,add,edit,";
+            }
+                if (field.visibility.search("show") > -1) {
+                    $(".check_show-" + field.id).prop("checked", true);
+                    document.getElementById("send_c_value-" + id).value += "show,";
+                }
+                if (field.visibility.search("edit") > -1) {
+                    $(".check_edit-" + field.id).prop("checked", true);
+                    document.getElementById("send_c_value-" + id).value += "edit,";
+                }
+                if (field.visibility.search("add") > -1) {
+                    $(".check_add-" + field.id).prop("checked", true);
+                    document.getElementById("send_c_value-" + id).value += "add,,";
+                }
         }
+    },
+    mounted(){
+        this.check_exist(this.old_field);
     }
 });
 
 Vue.component("noti_undo" , {
-    template: `<div v-bind:class="'alert alert-info deleted_field-' + deleted_field.id"><h4 style="font-family: Mada, sans-serif" class="text-center">استعد الحقل مجددا من هنا <span v-on:click="field_undo(deleted_field)" style="cursor: pointer;" class="text-warning"> هنا </span></h4></div>`,
+    template: `<div v-bind:class="'alert alert-info deleted_field-' + deleted_field.id"><h4 style="font-family: Mada, sans-serif" class="text-center">استعد الحقل مجددا من <span v-on:click="field_undo(deleted_field)" style="cursor: pointer;" class="text-warning"> هنا </span></h4></div>`,
     props: ["deleted_field"],
     data () {
       return {
@@ -78,6 +148,7 @@ Vue.component("noti_undo" , {
     message: 'Hello World!',
     all_relations: [],
     field_names: [],
+    field_ids: [],
     relation_order: 0,
     field_order: 1,
     all_fields: [],
@@ -92,6 +163,7 @@ Vue.component("noti_undo" , {
   		for (var r = 0; r < inputCount; r++) {
           if (this.field_names.indexOf($(".f_name-"+r).val()) === -1 && $(".f_name-"+r).val() !== ""){
             this.field_names.push($(".f_name-"+r).val())
+            this.field_ids.push();
           }
         }
  		
@@ -156,6 +228,9 @@ Vue.component("noti_undo" , {
             this.deleted_field = response.data;
             console.log(this.deleted_field);
             this.noti_undo.push({component: "noti_undo" , props: {deleted_field: this.deleted_field}});
+            setTimeout(function() {
+                $('.deleted_field-'+id).fadeOut();
+            }, 7000 );
         });
     }
 

@@ -106,5 +106,10 @@
                 </div>
             </div>
         </div>
+            @foreach($table_data as $field)
+                @if ($field->relation_table != NULL)
+                <edit_relation ids="{{ $field->id }}" table_id="{{ $table_id }}" :all_tables="{{ $all_tables }}" relation_table="{{ $field->relation_table }}" field="{{ $field->field_name }}"></edit_relation>
+                @endif
+             @endforeach
     </section>
 @endsection

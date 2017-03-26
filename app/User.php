@@ -28,5 +28,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function tester() {
+        return $this->belongsTo("koko");
+    }
+
 }
                 
