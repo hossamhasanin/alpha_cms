@@ -76,11 +76,11 @@ class TableController extends Controller
           $fields->field_nullable = isset($request->nullable[$id]) ? 1 : 0;
           // store the default value of the field
           $fields->default_value = isset($request->default_values[$id]) ? $request->default_values[$id] : "";
-          foreach ($request->relation_fields as $i => $field) {
+          /*foreach ($request->relation_fields as $i => $field) {
               if ($field == $name) {
                   $fields->relation_field = $request->relation_tabels[$i];
               }
-          }
+          }*/
           // save the default label_name
           $fields->label_name = $name; 
           $fields->save();
@@ -255,7 +255,9 @@ class TableController extends Controller
 
         $all_tables = a_Tables::pluck("table");
 
-        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables]);
+        $last_field = fields::orderBy('id', 'desc')->first()->id;
+
+        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables , "last_field" => $last_field]);
     }
 
 }

@@ -106,10 +106,16 @@
                 </div>
             </div>
         </div>
-            @foreach($table_data as $field)
-                @if ($field->relation_table != NULL)
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-md-4">
+                <div class="btn btn-success" v-on:click="add_new_relation({{ $last_field }})" >Add</div>
+            </div>
+        </div>
+        <div :is="add_new.component" v-for="add_new in add_new_relations" v-bind="add_new.props" :all_tables="{{ $all_tables }}"></div>
+        @foreach($table_data as $field)
+            @if ($field->relation_table != NULL)
                 <edit_relation ids="{{ $field->id }}" table_id="{{ $table_id }}" :all_tables="{{ $all_tables }}" relation_table="{{ $field->relation_table }}" field="{{ $field->field_name }}"></edit_relation>
                 @endif
-             @endforeach
+        @endforeach
     </section>
 @endsection

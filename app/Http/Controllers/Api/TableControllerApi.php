@@ -30,32 +30,58 @@ class TableControllerApi extends Controller
         return response(["id" => $id,"name" => $name , "type" => $type , "nullable" => $nullable , "visibility" => $visibility , "default_value" => $default_value , "label_name" => $label_name] , 200);
     }
 
-    public function DeleteRelationship(Request $request){
+    public function DeleteRelationship($relation_table , $child_table_id , $field_id){
         // get the parent model of the relationship
-        $parent_model = a_Tables::where("table" , $request->relation_table)->first()->module_name;
+        $parent_model = a_Tables::where("table" , $relation_table)->first()->module_name;
 
-        $child_model = a_Tables::find($request->child_table_id)->module_name;
+        $child_model = a_Tables::find($child_table_id)->module_name;
+        if ($parent_model && $child_model) {
 
-        $child_table = a_Tables::find($request->child_table_id)->table;
+            $child_table = a_Tables::find($child_table_id)->table;
 
-        //$app_child_model = "'App\\$parent_model'";
-        $child_model_edit = '/public\s*function\s*'. $request->relation_table .'\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\(.*\);\s*\n*\}/';
+            $child_model_edit = '/public\s*function\s*' . $relation_table . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\(.*\);\s*\n*\}/';
 
 
-        // get the child model content
-        $child_model_file = file_get_contents(app_path() . "/$child_model.php");
+            // get the child model content
+            try{
+                $child_model_file = file_get_contents(app_path() . "/$child_model.php");
+            }catch(Exception $e){
+                echo "Error while opening the file , The error is : " . $e;
+            }
 
-        $child_model_file = preg_replace($child_model_edit , "" , $child_model_file);
+            try{
+                $child_model_file = preg_replace($child_model_edit, "", $child_model_file);
 
-        file_put_contents(app_path() . "/$child_model.php" , $child_model_file);
+                file_put_contents(app_path() . "/$child_model.php", $child_model_file);
 
-        $parent_model_edit = '/public\s*function\s*'. $child_table .'\s*\(\)\s*\n*\{\s*\n*return\s+\$this->hasMany\(.*\);\s*\n*\}/';
-        // parend modifing
-        $parent_model_file = file_get_contents(app_path() . "/$parent_model.php");
+            }catch(Exception $e){
+                echo "Error while modifing the file , The error is : " . $e;
+            }
 
-        $parent_model_file = preg_replace($parent_model_edit , "" , $parent_model_file);
+            $parent_model_edit = '/public\s*function\s*' . $child_table . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->hasMany\(.*\);\s*\n*\}/';
+            // parent modifing
+            try{
+                $parent_model_file = file_get_contents(app_path() . "/$parent_model.php");
+            }catch(Exception $e){
+                echo "Error while opening the file , The error is : " . $e;
+            }
 
-        file_put_contents(app_path() . "/$parent_model.php" , $parent_model_file);
+            try {
+                $parent_model_file = preg_replace($parent_model_edit, "", $parent_model_file);
+
+                file_put_contents(app_path() . "/$parent_model.php", $parent_model_file);
+            }catch(Exception $e){
+                echo "Error while modifing the file , The error is : " . $e;
+            }
+
+            $the_field = fields::find($field_id);
+            $the_field->relation_table = NULL;
+            $the_field->save();
+
+            return response("success :)", 201);
+        } else {
+            return response("Faild error pro :( , i dont find the files" , 404);
+        }
 
     }
 

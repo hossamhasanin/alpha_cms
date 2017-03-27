@@ -155,7 +155,9 @@ Vue.component("noti_undo" , {
     send_checks: [],
     deleted_field: null,
     noti_undo: [],
-    back_again: back_again
+    back_again: back_again,
+    add_new_relations: [],
+    order_add_relaion: 0
   },
   methods: {
   	add_relation() {
@@ -232,6 +234,11 @@ Vue.component("noti_undo" , {
                 $('.deleted_field-'+id).fadeOut();
             }, 7000 );
         });
+    },
+    add_new_relation(last_field){
+        this.order_add_relaion = last_field;
+        this.order_add_relaion += 1;
+        this.add_new_relations.push({component: "edit_relation" , props: {field: "" , ids: this.order_add_relaion , relation_table: "" , table_id: ""}});
     }
 
   },

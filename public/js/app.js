@@ -11339,7 +11339,9 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         send_checks: [],
         deleted_field: null,
         noti_undo: [],
-        back_again: back_again
+        back_again: back_again,
+        add_new_relations: [],
+        order_add_relaion: 0
     },
     methods: {
         add_relation: function add_relation() {
@@ -11419,6 +11421,11 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                     $('.deleted_field-' + id).fadeOut();
                 }, 7000);
             });
+        },
+        add_new_relation: function add_new_relation(last_field) {
+            this.order_add_relaion = last_field;
+            this.order_add_relaion += 1;
+            this.add_new_relations.push({ component: "edit_relation", props: { field: "", ids: this.order_add_relaion, relation_table: "", table_id: "" } });
         }
     },
     mounted: function mounted() {
@@ -12348,14 +12355,19 @@ module.exports = function spread(callback) {
     props: ["field", "all_tables", "ids", "relation_table", "table_id"],
     data: function data() {
         return {
-            //relationships: this.relationships,
-            //field: this.field
+            new_table: this.relation_table
         };
     },
 
     methods: {
         remove_relation: function remove_relation(e) {
             $(".r_" + $(e).attr("_r")).remove();
+            if (this.relation_table != "" && this.table_id != "" && this.ids != "") {
+                this.$http.delete("/api/v1/delete_relationship/" + this.relation_table + "/" + this.table_id + "/" + this.ids).then(function (response) {
+                    console.log(response);
+                });
+            }
+            //console.log(this.relation_table)
         }
     }
 };
@@ -12630,7 +12642,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "box-header"
   }, [_c('h3', {
     staticClass: "box-title"
-  }, [_vm._v("Relationship with : " + _vm._s(_vm.relation_table))])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("Relationship with : " + _vm._s(_vm.relation_table == "" ? _vm.new_table : _vm.relation_table))])]), _vm._v(" "), _c('div', {
     staticClass: "box-body"
   }, [_c('div', {
     staticClass: "row"
@@ -12640,30 +12652,52 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "field"
     }
-  }, [_vm._v("field name")]), _vm._v(" "), _c('div', {
-    staticClass: "form-control"
-  }, [_vm._v(_vm._s(_vm.field))])]), _vm._v(" "), _c('div', {
+  }, [_vm._v("field name")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "name": 'field_in_relationship[' + _vm.ids + ']'
+    },
+    domProps: {
+      "value": _vm.field
+    }
+  })]), _vm._v(" "), _c('div', {
     staticClass: "col-md-3"
   }, [_c('label', {
     attrs: {
       "for": "tables"
     }
   }, [_vm._v("relationship to the table")]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.new_table),
+      expression: "new_table"
+    }],
     staticClass: "form-control",
     attrs: {
       "name": 'relationship[' + _vm.ids + ']'
+    },
+    on: {
+      "change": function($event) {
+        _vm.new_table = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        })[0]
+      }
     }
   }, _vm._l((_vm.all_tables), function(relationship) {
     return _c('option', {
       domProps: {
         "value": relationship,
-        "selected": _vm.relation_table == relationship ? true : false
+        "selected": relationship == _vm.relation_table ? true : false
       }
     }, [_vm._v(_vm._s(relationship))])
   }))]), _vm._v(" "), _c('div', {
     staticClass: "col-md-3"
-  }, [_c('div', {
-    staticClass: "btn btn-danger",
+  }, [_c('label', [_vm._v("Remove")]), _vm._v(" "), _c('div', {
+    staticClass: "btn btn-danger form-control",
     attrs: {
       "_r": _vm.ids
     },
