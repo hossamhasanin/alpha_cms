@@ -1,7 +1,7 @@
 <script>
 
     export default {
-        props:["field" , "all_tables" , "ids" , "relation_table" , "table_id"],
+        props:["field" , "all_tables" , "ids" , "relation_table" , "table_id" , "all_fields"],
         data(){
             return {
                 new_table: this.relation_table
@@ -32,7 +32,9 @@
         <div class="row">
             <div class="col-md-3">
                 <label for="field">field name</label>
-                <input class="form-control" v-bind:name="'field_in_relationship['+ ids +']'" v-bind:value="field">
+                <select v-bind:name="'field_in_relationship['+ ids +']'" class="form-control">
+                    <option v-bind:value="the_field" v-for="the_field in all_fields" :selected="the_field == field ? true : false">{{ the_field }}</option>
+                </select>
             </div>
             <div class="col-md-3">
                 <label for="tables">relationship to the table</label>

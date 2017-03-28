@@ -10,4 +10,9 @@ class fields extends Model
    	{
    		return $this->belongsTo("App\\a_Tables" , "table_id");
    	}
+
+   	public function relation_field(){
+   	    return $this->hasMany("App\\relationships" , "field_id");
+    }
+
 }

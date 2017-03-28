@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\a_Tables;
 use Artisan;
 use App\fields;
+use App\relationships;
 
 class TableController extends Controller
 {
@@ -132,9 +133,9 @@ class TableController extends Controller
     protected function modify_model($relation_tabels , $relation_fields , $child_table, $child_model)
     {
       // irritate the relation tables that should contain the parent table
-        foreach ($relation_tabels as $relation_tabel) {
+        foreach ($relation_tabels as $relation_id => $relation_tabel) {
           // irritate the relation fields to exctract the field that suppose to be the foriegn key
-            foreach ($relation_fields as $relation_field) {
+            //foreach ($relation_fields as $relation_field) {
              
              // get the parent model of the relationship
                 $parent_model = a_Tables::where("table" , $relation_tabel)->first()->module_name;
@@ -147,7 +148,7 @@ class TableController extends Controller
              // add the function of the relationship to the child model
                 $child_model_file = $child_model_file . '
                     public function '.$relation_tabel.'(){
-                        return $this->belongsTo('. $app_child_model .');
+                        return $this->belongsTo('. $app_child_model .' , '. $relation_fields[$relation_id] .');
                     }
               }
                 ';
@@ -162,13 +163,13 @@ class TableController extends Controller
                 // add the relationship function to parent model
                 $parent_model_file = $parent_model_file . '
                     public function '.$child_table.'(){
-                        return $this->hasMany('. $app_parent_model .');
+                        return $this->hasMany('. $app_parent_model .' , '. $relation_fields[$relation_id] .');
                     }
               }
                 ';
                 // put this changes in the parent model
                 file_put_contents(app_path() . "/$parent_model.php" , $parent_model_file);
-            }
+            //}
         }
     }
 
@@ -255,9 +256,170 @@ class TableController extends Controller
 
         $all_tables = a_Tables::pluck("table");
 
-        $last_field = fields::orderBy('id', 'desc')->first()->id;
+        $last_relationship = relationships::orderBy('id', 'desc')->first()->id;
 
-        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables , "last_field" => $last_field]);
+        $relations = a_Tables::where("slug" , "tester")->first()->child_relation()->get();
+
+        $all_fields = fields::pluck("field_name");
+
+        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables , "last_relationship" => $last_relationship , "relations" => $relations , "all_fields" => $all_fields]);
+    }
+
+    public function UpdateTable($table_id , Request $request){
+        $table_name = a_Tables::find($table_id)->table;
+        $table_model = a_Tables::find($table_id)->module_name;
+
+        $this->validate($request , [
+            'field_name.*' => "required",
+            'ids.*' => "required|numeric",
+            'field_type.*' => "required",
+            'visibility.*' => "required",
+            'label_name.*' => "required",
+        ]);
+
+        foreach (array_count_values($request->field_name) as $names){
+            if ($names > 1){
+                return redirect("dashboard/table/option/tester")->withErrors("There is fields repeated");
+                die();
+            }
+        }
+
+        $get_old_vals = fields::where("table_id" , $table_id)->get();
+
+        foreach ($get_old_vals as $old_val){
+            $new_name = $request->field_name[$old_val->id];
+            $new_type = $request->field_type[$old_val->id];
+            $new_nullable = isset($request->nullable[$old_val->id]) ? "NULL" : "NOT NULL";
+            $new_default_value = isset($request->default_value[$old_val->id]) && ($new_type == "varchar(255)" or $new_type == "int(11)") ? "DEFAULT " . "'" .$request->default_value[$old_val->id] . "'" : "DEFAULT NULL";
+            if ($new_name != $old_val->field_name or $new_type != $old_val->field_type or $new_nullable != $old_val->nullable or $new_default_value != $old_val->default_value){
+                // ALTER TABLE `tester` CHANGE `lljjllj` `lljjllj` LONGTEXT NULL DEFAULT NULL;
+                try{
+                    DB::statement("ALTER TABLE $table_name CHANGE $old_val->field_name $new_name $new_type $new_nullable $new_default_value;");
+                }catch (Exception $e){
+                    echo "OHHHHH ! Sorry but i think there big problem in database";
+                }
+                //DB::statement("ALTER TABLE tester CHANGE dsfsdf hihihi text NULL DEFAULT weuhiwf");
+            }
+        }
+
+        /*/foreach ($request->ids as $field_id) {
+            $requested_field = fields::find($field_id);
+            $requested_field->field_name = $request->field_name[$field_id];
+            $requested_field->table_id = $table_id;
+            $requested_field->field_type = $request->field_type[$field_id];
+            $requested_field->visibility = $request->visibility[$field_id];
+            $requested_field->relation_table = isset($request->relationship[$field_id]) ? $request->relationship[$field_id] : NULL;
+            $requested_field->field_nullable = isset($request->nullable[$field_id]) ? $request->nullable[$field_id] : 0;
+            if ($request->field_type[$field_id] == "varchar(255)" or $request->field_type[$field_id] == "int(11)" or $request->field_type[$field_id] == "float"){
+                $requested_field->default_value = $request->default_value[$field_id];
+            }
+            $requested_field->label_name = $request->label_name[$field_id];
+            $requested_field->save();
+        }*/
+
+        // modify relationships if there is new
+
+        // Array contains the new relationships which actually is the new parents
+        $new_parents = [];
+        // Array contains the fields in the new relationship
+        $new_fields = [];
+
+        foreach ($request->relationship as $relation_id => $parent_table){
+            $relationship = relationships::find($relation_id);
+            $parent_id = a_Tables::where("table" , $parent_table)->first()->id;
+            $field_id = fields::where("field_name" , $request->field_in_relationship[$relation_id])->first()->id;
+            if (!$relationship){
+                $new_relation = new relationships();
+                $new_relation->parent_id = $parent_id;
+                $new_relation->child_id = $table_id;
+                $new_relation->field_id = $field_id;
+                $new_relation->save();
+
+                $new_parents[$relation_id] += $parent_table;
+                $new_fields[$field_id] += $request->field_in_relationship[$relation_id];
+
+            } else {
+                $relationship->parent_id = $parent_id;
+                $relationship->child_id = $table_id;
+                $relationship->field_id = $field_id;
+                $relationship->save();
+
+                $parent_model = a_Tables::where("table" , $parent_table)->first()->module_name;
+                $child_model = a_Tables::find($table_id)->module_name;
+                //$child_table = a_Tables::find($table_id)->table;
+
+                $child_model_edit = '/public\s*function\s*' . $parent_table . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\(.*\);\s*\n*\}/';
+
+
+                // get the child model content
+                try{
+                    // Get the content of the child model
+                    $child_model_file = file_get_contents(app_path() . "/$child_model.php");
+                // catch any error if it happened
+                }catch(Exception $e){
+                    echo "Error while opening the file , The error is : " . $e;
+                }
+
+                try{
+                    // define the model that should be the parent of the relation ship
+                    $app_child_model = "'App\\$parent_model'";
+                    // Make the function of the child part of the relationship
+                    $relation_child_function = '
+                    public function '.$parent_table.'(){
+                        return $this->belongsTo('. $app_child_model .' , '. $request->field_in_relationship[$relation_id] .');
+                    }
+              }
+                ';
+                    // Replace the old function with the new
+                    $child_model_file = preg_replace($child_model_edit, $relation_child_function , $child_model_file);
+                    // Put the changes in the file
+                    file_put_contents(app_path() . "/$child_model.php", $child_model_file);
+
+                }catch(Exception $e){
+                    echo "Error while modifing the file , The error is : " . $e;
+                }
+
+                $parent_model_edit = '/public\s*function\s*' . $table_name . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->hasMany\(.*\);\s*\n*\}/';
+                // parent modifing
+                try{
+                    $parent_model_file = file_get_contents(app_path() . "/$parent_model.php");
+                }catch(Exception $e){
+                    echo "Error while opening the file , The error is : " . $e;
+                }
+
+                try {
+                    // define the parent model to put it in the function
+                    $app_parent_model = "'App\\$child_model'";
+                    // add the relationship function to parent model
+                    $relation_parent_function = '
+                    public function '.$table_name.'(){
+                        return $this->hasMany('. $app_parent_model .' , '. $request->field_in_relationship[$relation_id] .');
+                    }
+              }
+                ';
+                    // Replace the old function with the new
+                    $parent_model_file = preg_replace($parent_model_edit, $relation_parent_function, $parent_model_file);
+                    // Put the changes in the file
+                    file_put_contents(app_path() . "/$parent_model.php", $parent_model_file);
+                }catch(Exception $e){
+                    echo "Error while modifing the file , The error is : " . $e;
+                }
+
+            }
+
+        }
+
+        $this->modify_model($request->relationship , $request->field_in_relationship , $table_name , $table_model);
+
+
+
+        //$table_fields = fields::where("table_id" , $table_id)->get();
+
+
+        $request->session()->flash('add_option', 'you added this options successfully!');
+
+
+        //return redirect()->back();
     }
 
 }

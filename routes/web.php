@@ -35,6 +35,8 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
             Route::post("/option/{table_id}" , "TableController@StoreOption")->name("store_option")->where("table_id" , "\d+");
 
             Route::get("/edit/{table}" , "TableController@EditTable")->name("edit_table")->where("table" , "[a-zA-Z]+|[a-zA-Z]+\d+");
+
+          Route::get("/update/{table_id}" , "TableController@UpdateTable")->name("update_table")->where("table_id" , "\d+");
       });
 
       Route::get("/tables/" , "TableController@ShowAll")->name("show_all");
@@ -80,7 +82,7 @@ foreach (array_count_values($tr) as $v){
 }*/
 
     //$app_child_model = "'App\\$parent_model'";
-    $table = "tester";
+    /*$table = "tester";
     $child_model_edit = '/public\s*function\s*'. $table .'\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\(.*\);\s*\n*\}/';
 
     $parent_model_edit = '/public\s*function\s*users\s*\(\)\s*\n*\{\s*\n*return\s+\$this->hasMany\(.*\);\s*\n*\}/';
@@ -90,7 +92,13 @@ foreach (array_count_values($tr) as $v){
 
     $child_model_file = preg_replace($child_model_edit , "" , $child_model_file);
 
-    file_put_contents(app_path() . "/User.php" , $child_model_file);
+    file_put_contents(app_path() . "/User.php" , $child_model_file);*/
+
+     //dd(\App\a_Tables::pluck("table"));
+
+    $s = \App\a_Tables::where("slug" , "tester")->first()->child_relation()->get();
+   // $d = \App\relationships::where("child_id" , "2")->get()->all()->fields->get();
+    dd($s);
 
 
 

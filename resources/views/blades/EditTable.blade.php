@@ -3,6 +3,7 @@
 @section("content")
 
     <section class="content">
+        {{ Form::open(["route" => ["update_table" , $table_id] , "method" => "update"])  }}
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -10,7 +11,6 @@
                         <h3 class="box-title">Add options</h3>
                     </div>
                     <!-- /.box-header -->
-                    {{ Form::open(["route" => ["store_option" , $table_id]])  }}
                     <div class="box-body">
                         @if (count($errors) > 0)
                             <div class="alert alert-danger">
@@ -102,20 +102,18 @@
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-                    {{ Form::close() }}
                 </div>
             </div>
         </div>
         <div class="row" style="margin-bottom: 10px;">
             <div class="col-md-4">
-                <div class="btn btn-success" v-on:click="add_new_relation({{ $last_field }})" >Add</div>
+                <div class="btn btn-success" v-on:click="add_new_relation({{ $last_relationship }})" >Add</div>
             </div>
         </div>
         <div :is="add_new.component" v-for="add_new in add_new_relations" v-bind="add_new.props" :all_tables="{{ $all_tables }}"></div>
-        @foreach($table_data as $field)
-            @if ($field->relation_table != NULL)
-                <edit_relation ids="{{ $field->id }}" table_id="{{ $table_id }}" :all_tables="{{ $all_tables }}" relation_table="{{ $field->relation_table }}" field="{{ $field->field_name }}"></edit_relation>
-                @endif
+        @foreach($relations as $relation)
+                <edit_relation ids="{{ $relation->id }}" table_id="{{ $table_id }}" :all_tables="{{ $all_tables }}" relation_table="{{ $relation->parent_table->table }}" field="{{ $relation->fields->field_name }}" :all_fields="{{ $all_fields }}"></edit_relation>
         @endforeach
+        {{ Form::close() }}
     </section>
 @endsection

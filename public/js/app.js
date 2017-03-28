@@ -12352,7 +12352,7 @@ module.exports = function spread(callback) {
 
 
 /* harmony default export */ __webpack_exports__["default"] = {
-    props: ["field", "all_tables", "ids", "relation_table", "table_id"],
+    props: ["field", "all_tables", "ids", "relation_table", "table_id", "all_fields"],
     data: function data() {
         return {
             new_table: this.relation_table
@@ -12652,15 +12652,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "for": "field"
     }
-  }, [_vm._v("field name")]), _vm._v(" "), _c('input', {
+  }, [_vm._v("field name")]), _vm._v(" "), _c('select', {
     staticClass: "form-control",
     attrs: {
       "name": 'field_in_relationship[' + _vm.ids + ']'
-    },
-    domProps: {
-      "value": _vm.field
     }
-  })]), _vm._v(" "), _c('div', {
+  }, _vm._l((_vm.all_fields), function(the_field) {
+    return _c('option', {
+      domProps: {
+        "value": the_field,
+        "selected": the_field == _vm.field ? true : false
+      }
+    }, [_vm._v(_vm._s(the_field))])
+  }))]), _vm._v(" "), _c('div', {
     staticClass: "col-md-3"
   }, [_c('label', {
     attrs: {
