@@ -12,6 +12,7 @@ use Mockery\CountValidator\Exception;
 use Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+//use JavaScript;
 
 use App\a_Tables;
 use Artisan;
@@ -42,8 +43,23 @@ class TableController extends Controller
         'field_name.*' => 'required',
         'field_type.*' => 'required',
         'relation_tabels.*' => "required",
-        "relation_fields.*" => "required"
+        "relation_fields.*" => "required",
+        "relation_name.*" => "required"
     ]);
+
+        foreach (array_count_values($request->field_name) as $names){
+            if ($names > 1){
+                return redirect("dashboard/table/add")->withErrors("There is fields repeated");
+                die();
+            }
+        }
+
+        foreach (array_count_values($request->relation_name) as $names){
+            if ($names > 1){
+                return redirect("dashboard/table/add")->withErrors("There is fields repeated");
+                die();
+            }
+        }
 
       // save the data of new table in a_table (avillable tables) to use it later
       $a_tables = new a_Tables;
@@ -124,19 +140,19 @@ class TableController extends Controller
 
         // modify the two models of relationships parent_model and child model
         if ($request->relation_tabels){
-          $this->modify_model($request->relation_tabels , $request->relation_fields , $request->table_name , $request->module_name);
+          $this->modify_model($request->relation_tabels , $request->relation_fields , $request->table_name , $request->module_name , $request->relation_name);
         }
 
     }
 
 
-    protected function modify_model($relation_tabels , $relation_fields , $child_table, $child_model)
+    protected function modify_model($relation_tabels , $relation_fields , $child_table, $child_model , $relation_name)
     {
       // irritate the relation tables that should contain the parent table
         foreach ($relation_tabels as $relation_id => $relation_tabel) {
           // irritate the relation fields to exctract the field that suppose to be the foriegn key
-            //foreach ($relation_fields as $relation_field) {
-             
+            $relation_parent_name = $relation_name[$relation_id] . "_child";
+            $relation_child_name = $relation_name[$relation_id] . "_parent";
              // get the parent model of the relationship
                 $parent_model = a_Tables::where("table" , $relation_tabel)->first()->module_name;
              // get the child model content
@@ -147,11 +163,10 @@ class TableController extends Controller
                 $app_child_model = "'App\\$parent_model'";
              // add the function of the relationship to the child model
                 $child_model_file = $child_model_file . '
-                    public function '.$relation_tabel.'(){
-                        return $this->belongsTo('. $app_child_model .' , '. $relation_fields[$relation_id] .');
-                    }
-              }
-                ';
+public function '. $relation_child_name .'(){
+       return $this->belongsTo('. $app_child_model .' , "'. $relation_fields[$relation_id] .'");
+}
+}';
                 // modify the content of this child model and the new changes
                 file_put_contents(app_path() . "/$child_model.php" , $child_model_file);
                 // get the content of the parent model
@@ -162,14 +177,12 @@ class TableController extends Controller
                 $app_parent_model = "'App\\$child_model'";
                 // add the relationship function to parent model
                 $parent_model_file = $parent_model_file . '
-                    public function '.$child_table.'(){
-                        return $this->hasMany('. $app_parent_model .' , '. $relation_fields[$relation_id] .');
-                    }
-              }
-                ';
+public function '. $relation_parent_name .'(){
+       return $this->hasMany('. $app_parent_model .' , "'. $relation_fields[$relation_id] .'");
+}
+}';
                 // put this changes in the parent model
                 file_put_contents(app_path() . "/$parent_model.php" , $parent_model_file);
-            //}
         }
     }
 
@@ -262,6 +275,10 @@ class TableController extends Controller
 
         $all_fields = fields::pluck("field_name");
 
+        /*JavaScript::put([
+            "last_relationship" => $last_relationship
+        ]);*/
+
         return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables , "last_relationship" => $last_relationship , "relations" => $relations , "all_fields" => $all_fields]);
     }
 
@@ -279,7 +296,14 @@ class TableController extends Controller
 
         foreach (array_count_values($request->field_name) as $names){
             if ($names > 1){
-                return redirect("dashboard/table/option/tester")->withErrors("There is fields repeated");
+                return redirect("dashboard/table/edit/" + $table_name)->withErrors("There is fields repeated");
+                die();
+            }
+        }
+
+        foreach (array_count_values($request->relation_name) as $names){
+            if ($names > 1){
+                return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is fields repeated");
                 die();
             }
         }
@@ -323,22 +347,32 @@ class TableController extends Controller
         $new_parents = [];
         // Array contains the fields in the new relationship
         $new_fields = [];
+        // Array contains field_names for the new relationships
+        $new_names = [];
+        //$current_relations = relationships::get();
 
         foreach ($request->relationship as $relation_id => $parent_table){
             $relationship = relationships::find($relation_id);
             $parent_id = a_Tables::where("table" , $parent_table)->first()->id;
             $field_id = fields::where("field_name" , $request->field_in_relationship[$relation_id])->first()->id;
+            $relation_parent_name = $request->relation_name[$relation_id] . "_child";
+            $relation_child_name = $request->relation_name[$relation_id] . "_parent";
+            $relation_old_parent_name = $relationship->relation_name . "_child";
+            $relation_old_child_name = $relationship->relation_name . "_parent";
             if (!$relationship){
                 $new_relation = new relationships();
+                $new_relation->relation_name = $request->relation_name[$relation_id];
                 $new_relation->parent_id = $parent_id;
                 $new_relation->child_id = $table_id;
                 $new_relation->field_id = $field_id;
                 $new_relation->save();
 
-                $new_parents[$relation_id] += $parent_table;
-                $new_fields[$field_id] += $request->field_in_relationship[$relation_id];
+                $new_parents[$relation_id] = $parent_table;
+                $new_fields[$relation_id] = $request->field_in_relationship[$relation_id];
+                $new_names[$relation_id] = $request->relation_name[$relation_id];
 
-            } else {
+            } elseif ($relationship->relation_name != $request->relation_name[$relation_id] || $relationship->parent_id != $parent_id || $relationship->field_id != $field_id) {
+                $relationship->relation_name = $request->relation_name[$relation_id];
                 $relationship->parent_id = $parent_id;
                 $relationship->child_id = $table_id;
                 $relationship->field_id = $field_id;
@@ -348,7 +382,7 @@ class TableController extends Controller
                 $child_model = a_Tables::find($table_id)->module_name;
                 //$child_table = a_Tables::find($table_id)->table;
 
-                $child_model_edit = '/public\s*function\s*' . $parent_table . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\(.*\);\s*\n*\}/';
+                $child_model_edit = '/public\s*function\s*' . $relation_old_child_name . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\(.*\);\s*\n*\}/';
 
 
                 // get the child model content
@@ -365,11 +399,9 @@ class TableController extends Controller
                     $app_child_model = "'App\\$parent_model'";
                     // Make the function of the child part of the relationship
                     $relation_child_function = '
-                    public function '.$parent_table.'(){
-                        return $this->belongsTo('. $app_child_model .' , '. $request->field_in_relationship[$relation_id] .');
-                    }
-              }
-                ';
+public function '. $relation_child_name .'(){
+        return $this->belongsTo('. $app_child_model .' , "'. $request->field_in_relationship[$relation_id] .'");
+}';
                     // Replace the old function with the new
                     $child_model_file = preg_replace($child_model_edit, $relation_child_function , $child_model_file);
                     // Put the changes in the file
@@ -379,7 +411,7 @@ class TableController extends Controller
                     echo "Error while modifing the file , The error is : " . $e;
                 }
 
-                $parent_model_edit = '/public\s*function\s*' . $table_name . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->hasMany\(.*\);\s*\n*\}/';
+                $parent_model_edit = '/public\s*function\s*' . $relation_old_parent_name . '\s*\(\)\s*\n*\{\s*\n*return\s+\$this->hasMany\(.*\);\s*\n*\}/';
                 // parent modifing
                 try{
                     $parent_model_file = file_get_contents(app_path() . "/$parent_model.php");
@@ -392,11 +424,9 @@ class TableController extends Controller
                     $app_parent_model = "'App\\$child_model'";
                     // add the relationship function to parent model
                     $relation_parent_function = '
-                    public function '.$table_name.'(){
-                        return $this->hasMany('. $app_parent_model .' , '. $request->field_in_relationship[$relation_id] .');
-                    }
-              }
-                ';
+public function '. $relation_parent_name .'(){
+       return $this->hasMany('. $app_parent_model .' , "'. $request->field_in_relationship[$relation_id] .'");
+}';
                     // Replace the old function with the new
                     $parent_model_file = preg_replace($parent_model_edit, $relation_parent_function, $parent_model_file);
                     // Put the changes in the file
@@ -409,8 +439,9 @@ class TableController extends Controller
 
         }
 
-        $this->modify_model($request->relationship , $request->field_in_relationship , $table_name , $table_model);
-
+        if (count($new_parents) > 0) {
+            $this->modify_model($new_parents, $new_fields, $table_name, $table_model, $new_names);
+        }
 
 
         //$table_fields = fields::where("table_id" , $table_id)->get();

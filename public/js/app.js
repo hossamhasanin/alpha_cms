@@ -11341,7 +11341,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         noti_undo: [],
         back_again: back_again,
         add_new_relations: [],
-        order_add_relaion: 0
+        order_add_relaion: parseInt($("#last_relationship").val())
     },
     methods: {
         add_relation: function add_relation() {
@@ -11422,10 +11422,10 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 }, 7000);
             });
         },
-        add_new_relation: function add_new_relation(last_field) {
-            this.order_add_relaion = last_field;
+        add_new_relation: function add_new_relation(all_fields) {
+            //this.order_add_relaion = last_field;
             this.order_add_relaion += 1;
-            this.add_new_relations.push({ component: "edit_relation", props: { field: "", ids: this.order_add_relaion, relation_table: "", table_id: "" } });
+            this.add_new_relations.push({ component: "edit_relation", props: { field: "", ids: this.order_add_relaion, relation_table: "", table_id: "", all_fields: all_fields, relation_name: "" } });
         }
     },
     mounted: function mounted() {
@@ -12352,7 +12352,7 @@ module.exports = function spread(callback) {
 
 
 /* harmony default export */ __webpack_exports__["default"] = {
-    props: ["field", "all_tables", "ids", "relation_table", "table_id", "all_fields"],
+    props: ["field", "all_tables", "ids", "relation_table", "table_id", "all_fields", "relation_name"],
     data: function data() {
         return {
             new_table: this.relation_table
@@ -12650,6 +12650,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-md-3"
   }, [_c('label', {
     attrs: {
+      "for": "relation_name"
+    }
+  }, [_vm._v("Relation Name")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": 'relation_name[' + _vm.ids + ']'
+    },
+    domProps: {
+      "value": _vm.relation_name
+    }
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-3"
+  }, [_c('label', {
+    attrs: {
       "for": "field"
     }
   }, [_vm._v("field name")]), _vm._v(" "), _c('select', {
@@ -12657,14 +12672,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "name": 'field_in_relationship[' + _vm.ids + ']'
     }
-  }, _vm._l((_vm.all_fields), function(the_field) {
+  }, [_c('option', [_vm._v("chose")]), _vm._v(" "), _vm._l((_vm.all_fields), function(the_field) {
     return _c('option', {
       domProps: {
         "value": the_field,
-        "selected": the_field == _vm.field ? true : false
+        "selected": the_field == _vm.field ? true : ''
       }
     }, [_vm._v(_vm._s(the_field))])
-  }))]), _vm._v(" "), _c('div', {
+  })], 2)]), _vm._v(" "), _c('div', {
     staticClass: "col-md-3"
   }, [_c('label', {
     attrs: {
@@ -12728,6 +12743,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     class: 'row relation-' + _vm.order
   }, [_c('div', {
+    staticClass: "col-md-3"
+  }, [_c('label', {
+    attrs: {
+      "for": "relation_name"
+    }
+  }, [_vm._v("Relation Name")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": 'relation_name[' + _vm.order + ']'
+    }
+  })]), _vm._v(" "), _c('div', {
     staticClass: "col-xs-3 col-md-4"
   }, [_c('label', [_vm._v("chose field")]), _vm._v(" "), _c('select', {
     staticClass: "form-control",

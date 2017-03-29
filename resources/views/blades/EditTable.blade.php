@@ -2,8 +2,9 @@
 
 @section("content")
 
+    <input type="hidden" id="last_relationship" value={{ $last_relationship }}>
     <section class="content">
-        {{ Form::open(["route" => ["update_table" , $table_id] , "method" => "update"])  }}
+        {{ Form::open(["route" => ["update_table" , $table_id] , "method" => "put"])  }}
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -107,12 +108,12 @@
         </div>
         <div class="row" style="margin-bottom: 10px;">
             <div class="col-md-4">
-                <div class="btn btn-success" v-on:click="add_new_relation({{ $last_relationship }})" >Add</div>
+                <div class="btn btn-success" v-on:click="add_new_relation({{ $all_fields }})" >Add</div>
             </div>
         </div>
         <div :is="add_new.component" v-for="add_new in add_new_relations" v-bind="add_new.props" :all_tables="{{ $all_tables }}"></div>
         @foreach($relations as $relation)
-                <edit_relation ids="{{ $relation->id }}" table_id="{{ $table_id }}" :all_tables="{{ $all_tables }}" relation_table="{{ $relation->parent_table->table }}" field="{{ $relation->fields->field_name }}" :all_fields="{{ $all_fields }}"></edit_relation>
+                <edit_relation ids="{{ $relation->id }}" table_id="{{ $table_id }}" :all_tables="{{ $all_tables }}" relation_table="{{ $relation->parent_table->table }}" field="{{ $relation->fields->field_name }}" :all_fields="{{ $all_fields }}" relation_name="{{ $relation->relation_name }}"></edit_relation>
         @endforeach
         {{ Form::close() }}
     </section>

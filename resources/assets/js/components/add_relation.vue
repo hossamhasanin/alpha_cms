@@ -35,6 +35,10 @@
 
 <template>
 	<div v-bind:class="'row relation-' + order">
+		<div class="col-md-3">
+			<label for="relation_name">Relation Name</label>
+			<input type="text" class="form-control" v-bind:name="'relation_name['+ order +']'" >
+		</div>
 		<div class='col-xs-3 col-md-4'>
 			<label>chose field</label>
 			<select class='form-control' v-bind:id="'fetch_field-' + order" v-bind:name="'relation_fields['+ order +']'">

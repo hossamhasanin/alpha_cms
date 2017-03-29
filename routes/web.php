@@ -36,7 +36,7 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
 
             Route::get("/edit/{table}" , "TableController@EditTable")->name("edit_table")->where("table" , "[a-zA-Z]+|[a-zA-Z]+\d+");
 
-          Route::get("/update/{table_id}" , "TableController@UpdateTable")->name("update_table")->where("table_id" , "\d+");
+          Route::put("/update/{table_id}" , "TableController@UpdateTable")->name("update_table")->where("table_id" , "\d+");
       });
 
       Route::get("/tables/" , "TableController@ShowAll")->name("show_all");

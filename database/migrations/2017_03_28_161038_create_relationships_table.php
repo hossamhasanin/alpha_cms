@@ -15,6 +15,7 @@ class CreateRelationshipsTable extends Migration
     {
         Schema::create('relationships', function (Blueprint $table) {
             $table->increments('id');
+            $table->string("relation_name");
             $table->integer('field_id');
             $table->integer('parent_id');
             $table->integer('child_id');
