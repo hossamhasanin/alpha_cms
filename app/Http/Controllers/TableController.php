@@ -303,7 +303,14 @@ public function '. $relation_parent_name .'(){
 
         foreach (array_count_values($request->relation_name) as $names){
             if ($names > 1){
-                return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is fields repeated");
+                return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is relation_names repeated");
+                die();
+            }
+        }
+
+        foreach (array_count_values($request->field_in_relationship) as $names){
+            if ($names > 1){
+                return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is field_in_relationships repeated");
                 die();
             }
         }
