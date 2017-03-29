@@ -22,7 +22,7 @@ class CreateFieldsTable extends Migration
             $table->string("visibility")->defualt("show,add,edit,");
             $table->integer('field_nullable');
             $table->integer('default_value');
-            $table->string('relation_table')->nullable();
+            //$table->string('relation_table')->nullable();
             $table->string("label_name");
             $table->timestamps();
         });

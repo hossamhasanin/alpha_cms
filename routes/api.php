@@ -19,5 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(["prefix" => "v1" , "middleware" => "auth:api"] , function (){
     Route::post("delete_field" , "Api\TableControllerApi@DeleteField")->name("delete_field_api");
-    Route::delete("delete_relationship/{relation_table}/{child_table_id}/{field_id}" , "Api\TableControllerApi@DeleteRelationship")->name("delete_relationship_api");
+    Route::post("restore_field" , "Api\TableControllerApi@RestoreField")->name("restore_field");
+    Route::delete("delete_relationship/{relation_table}/{child_table_id}/{relation_id}" , "Api\TableControllerApi@DeleteRelationship")->name("delete_relationship_api");
 });

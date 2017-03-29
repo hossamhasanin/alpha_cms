@@ -267,9 +267,13 @@ public function '. $relation_parent_name .'(){
 
         $table_id = a_Tables::where("slug" , $table)->first()->id;
 
+        $table_name = a_Tables::where("slug" , $table)->first()->table;
+
         $all_tables = a_Tables::pluck("table");
 
-        $last_relationship = relationships::orderBy('id', 'desc')->first()->id;
+        $last_relationship = isset(relationships::orderBy('id', 'desc')->first()->id) ? relationships::orderBy('id', 'desc')->first()->id : 0;
+
+        $last_field = isset(fields::orderBy('id', 'desc')->first()->id) ? fields::orderBy('id', 'desc')->first()->id : 0;
 
         $relations = a_Tables::where("slug" , "tester")->first()->child_relation()->get();
 
@@ -279,7 +283,7 @@ public function '. $relation_parent_name .'(){
             "last_relationship" => $last_relationship
         ]);*/
 
-        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables , "last_relationship" => $last_relationship , "relations" => $relations , "all_fields" => $all_fields]);
+        return view("blades.EditTable" , ["table_data" => $table_data , "table_id" => $table_id , "all_tables" => $all_tables , "last_relationship" => $last_relationship , "relations" => $relations , "all_fields" => $all_fields , "table_nane" => $table_name , "last_field" => $last_field]);
     }
 
     public function UpdateTable($table_id , Request $request){
@@ -333,20 +337,20 @@ public function '. $relation_parent_name .'(){
             }
         }
 
-        /*/foreach ($request->ids as $field_id) {
+        foreach ($request->ids as $field_id) {
             $requested_field = fields::find($field_id);
             $requested_field->field_name = $request->field_name[$field_id];
             $requested_field->table_id = $table_id;
             $requested_field->field_type = $request->field_type[$field_id];
             $requested_field->visibility = $request->visibility[$field_id];
-            $requested_field->relation_table = isset($request->relationship[$field_id]) ? $request->relationship[$field_id] : NULL;
+            //$requested_field->relation_table = isset($request->relationship[$field_id]) ? $request->relationship[$field_id] : NULL;
             $requested_field->field_nullable = isset($request->nullable[$field_id]) ? $request->nullable[$field_id] : 0;
             if ($request->field_type[$field_id] == "varchar(255)" or $request->field_type[$field_id] == "int(11)" or $request->field_type[$field_id] == "float"){
                 $requested_field->default_value = $request->default_value[$field_id];
             }
             $requested_field->label_name = $request->label_name[$field_id];
             $requested_field->save();
-        }*/
+        }
 
         // modify relationships if there is new
 
@@ -454,10 +458,10 @@ public function '. $relation_parent_name .'(){
         //$table_fields = fields::where("table_id" , $table_id)->get();
 
 
-        $request->session()->flash('add_option', 'you added this options successfully!');
+        $request->session()->flash('edit_table', 'قد تم تعديل الجدول بنجاح :)');
 
 
-        //return redirect()->back();
+        return redirect()->back();
     }
 
 }

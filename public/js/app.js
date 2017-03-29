@@ -11259,7 +11259,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('edit_relation', __WEBPACK
 var back_again = [];
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("old_field", {
-    template: '<tr v-bind:class="\'old_field-\' + old_field.id">\n                    <td><input type="text" class="form-control" v-bind:name="\'field_name[\'+ old_field.id +\']\'" v-bind:value="old_field.name"></td>\n                    <td>\n                        <select v-bind:name="\'field_type[\'+ old_field.id +\']\'" class="form-control">\n                            <option v-for="field_type in field_types" :value="field_type" :selected="field_type == old_field.type ? true : false">{{ field_type == "varchar(255)" ? "varchar" : field_type == "int(11)" ? "int" : field_type }}</option>\n                        </select>\n                    </td>\n                    <td>\n                    <div class="checkbox checkbox-slider--b checkbox-slider-md">\n                       <label>\n                        <input type="checkbox" v-bind:name="\'nullable[\'+ old_field.id +\']\'" :checked="old_field.nullable == 1 ? true : false" value="1"><span></span>\n                       </label>\n                    </div>\n                    </td>\n                    <td>\n                        <input type="hidden" v-bind:name="\'visibility[\'+ old_field.visibility +\']\'" v-bind:id="\'send_c_value-\'+old_field.id" v-bind:value="old_field.visibility">\n                              <div>\n                                 <label>\n                                   <input type="checkbox"  @change="check_all(old_field.id)" v-bind:class="\'check_all-\'+old_field.id" ><span> All</span>\n                                 </label>\n                              </div>\n                                 <div>\n                                   <label>\n                                       <input type="checkbox" @change="send_v_checks(old_field.id , \'show\')" v-bind:class="\'check_this-\'+old_field.id + \' check_show-\'+old_field.id" value="show"><span> show page</span>\n                                   </label>\n                                 </div>\n                                 <div>\n                                   <label>\n                                       <input type="checkbox" @change="send_v_checks(old_field.id , \'add\')" v-bind:class="\'check_this-\'+old_field.id + \' check_add-\'+old_field.id" value="add"><span> add page</span>\n                                   </label>\n                                 </div>\n                                 <div>\n                                    <label>\n                                        <input type="checkbox" @change="send_v_checks(old_field.id , \'edit\')" v-bind:class="\'check_this-\'+ old_field.id + \' check_edit-\'+old_field.id" value="edit"><span> edit page</span>\n                                    </label>\n                                 </div>\n                    </td>\n                    <td>{{ old_field.default_value }}</td>\n                    <td>{{ old_field.label_name }}</td>\n                    <td><div class="btn btn-danger" v-on:click="remove_old(old_field.id)">Remove</div></td>\n               </tr>',
+    template: '<tr v-bind:class="\'old_field-\' + old_field.id">\n                    <td><input type="text" class="form-control" v-bind:name="\'field_name[\'+ old_field.id +\']\'" v-bind:value="old_field.name"></td>\n                    <td>\n                        <select v-bind:name="\'field_type[\'+ old_field.id +\']\'" class="form-control">\n                            <option v-for="field_type in field_types" :value="field_type" :selected="field_type == old_field.type ? true : false">{{ field_type == "varchar(255)" ? "varchar" : field_type == "int(11)" ? "int" : field_type }}</option>\n                        </select>\n                    </td>\n                    <td>\n                    <div class="checkbox checkbox-slider--b checkbox-slider-md">\n                       <label>\n                        <input type="checkbox" v-bind:name="\'nullable[\'+ old_field.id +\']\'" :checked="old_field.nullable == 1 ? true : false" value="1"><span></span>\n                       </label>\n                    </div>\n                    </td>\n                    <td>\n                        <input type="hidden" v-bind:name="\'visibility[\'+ old_field.id +\']\'" v-bind:id="\'send_c_value-\'+old_field.id" v-bind:value="old_field.visibility">\n                              <div>\n                                 <label>\n                                   <input type="checkbox"  @change="check_all(old_field.id)" v-bind:class="\'check_all-\'+old_field.id" ><span> All</span>\n                                 </label>\n                              </div>\n                                 <div>\n                                   <label>\n                                       <input type="checkbox" @change="send_v_checks(old_field.id , \'show\')" v-bind:class="\'check_this-\'+old_field.id + \' check_show-\'+old_field.id" value="show"><span> show page</span>\n                                   </label>\n                                 </div>\n                                 <div>\n                                   <label>\n                                       <input type="checkbox" @change="send_v_checks(old_field.id , \'add\')" v-bind:class="\'check_this-\'+old_field.id + \' check_add-\'+old_field.id" value="add"><span> add page</span>\n                                   </label>\n                                 </div>\n                                 <div>\n                                    <label>\n                                        <input type="checkbox" @change="send_v_checks(old_field.id , \'edit\')" v-bind:class="\'check_this-\'+ old_field.id + \' check_edit-\'+old_field.id" value="edit"><span> edit page</span>\n                                    </label>\n                                 </div>\n                    </td>\n                    <td>{{ old_field.default_value }}</td>\n                    <td>{{ old_field.label_name }}</td>\n                    <td><div class="btn btn-danger" v-on:click="remove_old(old_field.id)">Remove</div></td>\n               </tr>',
     props: ["old_field"],
     data: function data() {
         return {
@@ -11296,6 +11296,22 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("old_field", {
                 $(".check_add-" + field.id).prop("checked", true);
                 document.getElementById("send_c_value-" + id).value += "add,,";
             }
+        },
+        send_v_checks: function send_v_checks(order, val) {
+            var chosed_allready = document.getElementById("send_c_value-" + order).value;
+            if ($(".check_" + val + "-" + order).prop("checked") && chosed_allready.search(val) == -1) {
+                document.getElementById("send_c_value-" + order).value += val + ",";
+                if (document.getElementById("send_c_value-" + order).value.search("add") > -1 && document.getElementById("send_c_value-" + order).value.search("edit") > -1 && document.getElementById("send_c_value-" + order).value.search("show") > -1) {
+                    $(".check_all-" + order).prop("checked", true);
+                }
+            }
+            if (!$(".check_" + val + "-" + order).prop("checked")) {
+                var new_value = document.getElementById("send_c_value-" + order).value.replace(val + ",", '');
+                document.getElementById("send_c_value-" + order).value = new_value;
+                //if (document.getElementById("send_c_value-"+order).value == ""){
+                $(".check_all-" + order).prop("checked", false);
+                //}
+            }
         }
     },
     mounted: function mounted() {
@@ -11316,6 +11332,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("noti_undo", {
     methods: {
         field_undo: function field_undo(deleted_field) {
             back_again.push({ component: "old_field", props: { old_field: deleted_field } });
+            this.$http.post("/api/v1/restore_field", { deleted_field: this.deleted_field }).then(function (response) {
+                console.log(response);
+            });
             $(".deleted_field-" + deleted_field.id).remove();
             this.collapsed = true;
         }
@@ -11341,7 +11360,9 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         noti_undo: [],
         back_again: back_again,
         add_new_relations: [],
-        order_add_relaion: parseInt($("#last_relationship").val())
+        order_add_relaion: parseInt($("#last_relationship").val()),
+        order_add_field: parseInt($("#last_field").val()),
+        add_new_field: []
     },
     methods: {
         add_relation: function add_relation() {
@@ -11358,7 +11379,7 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         },
         add_field: function add_field() {
             this.field_order += 1;
-            this.all_fields.push({ component: 'add_field', props: { order: this.field_order } });
+            this.all_fields.push({ component: 'add_field', props: { order: this.field_order, page: "add" } });
         },
 
 
@@ -11404,9 +11425,9 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             if (!$(".v_check_" + val + "-" + order).prop("checked")) {
                 var new_value = document.getElementById("send_c_value-" + order).value.replace(val + ",", '');
                 document.getElementById("send_c_value-" + order).value = new_value;
-                if (document.getElementById("send_c_value-" + order).value == "") {
-                    $("#check_all-" + order).prop("checked", false);
-                }
+                //if (document.getElementById("send_c_value-"+order).value == ""){
+                $("#check_all-" + order).prop("checked", false);
+                //}
             }
         },
         delete_field: function delete_field(id) {
@@ -11426,6 +11447,10 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             //this.order_add_relaion = last_field;
             this.order_add_relaion += 1;
             this.add_new_relations.push({ component: "edit_relation", props: { field: "", ids: this.order_add_relaion, relation_table: "", table_id: "", all_fields: all_fields, relation_name: "" } });
+        },
+        add_new_field_in_edit: function add_new_field_in_edit() {
+            this.order_add_field += 1;
+            this.add_new_field.push({ component: "add_field", props: { order: this.order_add_field, page: "edit" } });
         }
     },
     mounted: function mounted() {
@@ -12289,16 +12314,39 @@ module.exports = function spread(callback) {
 /* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = {
-	props: ["order"],
-	data: function data() {
-		return {};
-	},
+    props: ["order", "page"],
+    data: function data() {
+        return {};
+    },
 
-	methods: {
-		remove_field: function remove_field(fi) {
-			$(fi).remove();
-		}
-	}
+    methods: {
+        remove_field: function remove_field(fi) {
+            $(fi).remove();
+        },
+        check_all: function check_all(id) {
+            $(".check_this-" + id).prop('checked', $(".check_all-" + id).prop("checked"));
+            document.getElementById("send_c_value-" + id).value = "show,add,edit,";
+            if (!$(".check_all-" + id).prop("checked")) {
+                document.getElementById("send_c_value-" + id).value = "";
+            }
+        },
+        send_v_checks: function send_v_checks(order, val) {
+            var chosed_allready = document.getElementById("send_c_value-" + order).value;
+            if ($(".check_" + val + "-" + order).prop("checked") && chosed_allready.search(val) == -1) {
+                document.getElementById("send_c_value-" + order).value += val + ",";
+                if (document.getElementById("send_c_value-" + order).value.search("add") > -1 && document.getElementById("send_c_value-" + order).value.search("edit") > -1 && document.getElementById("send_c_value-" + order).value.search("show") > -1) {
+                    $(".check_all-" + order).prop("checked", true);
+                }
+            }
+            if (!$(".check_" + val + "-" + order).prop("checked")) {
+                var new_value = document.getElementById("send_c_value-" + order).value.replace(val + ",", '');
+                document.getElementById("send_c_value-" + order).value = new_value;
+                //if (document.getElementById("send_c_value-"+order).value == ""){
+                $(".check_all-" + order).prop("checked", false);
+                //}
+            }
+        }
+    }
 };
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
@@ -12552,7 +12600,16 @@ module.exports = Component.exports
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('tr', {
     class: 'field-' + _vm.order
-  }, [_c('td', [_c('input', {
+  }, [_c('input', {
+    staticClass: "ids",
+    attrs: {
+      "type": "hidden",
+      "name": 'ids[' + _vm.order + ']'
+    },
+    domProps: {
+      "value": _vm.order
+    }
+  }), _vm._v(" "), _c('td', [_c('input', {
     class: 'form-control f-name f_name-' + _vm.order,
     attrs: {
       "placeholder": "Field Name",
@@ -12599,14 +12656,71 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "name": 'nullable[' + _vm.order + ']',
       "type": "checkbox"
     }
-  }), _c('span')])])]), _vm._v(" "), _c('td', [_c('input', {
+  }), _c('span')])])]), _vm._v(" "), (_vm.page == 'edit') ? _c('td', [_c('input', {
+    attrs: {
+      "type": "hidden",
+      "name": 'visibility[' + _vm.order + ']',
+      "id": 'send_c_value-' + _vm.order,
+      "value": ""
+    }
+  }), _vm._v(" "), _c('div', [_c('label', [_c('input', {
+    class: 'check_all-' + _vm.order,
+    attrs: {
+      "type": "checkbox"
+    },
+    on: {
+      "change": function($event) {
+        _vm.check_all(_vm.order)
+      }
+    }
+  }), _c('span', [_vm._v(" All")])])]), _vm._v(" "), _c('div', [_c('label', [_c('input', {
+    class: 'check_this-' + _vm.order + ' check_show-' + _vm.order,
+    attrs: {
+      "type": "checkbox",
+      "value": "show"
+    },
+    on: {
+      "change": function($event) {
+        _vm.send_v_checks(_vm.order, 'show')
+      }
+    }
+  }), _c('span', [_vm._v(" show page")])])]), _vm._v(" "), _c('div', [_c('label', [_c('input', {
+    class: 'check_this-' + _vm.order + ' check_add-' + _vm.order,
+    attrs: {
+      "type": "checkbox",
+      "value": "add"
+    },
+    on: {
+      "change": function($event) {
+        _vm.send_v_checks(_vm.order, 'add')
+      }
+    }
+  }), _c('span', [_vm._v(" add page")])])]), _vm._v(" "), _c('div', [_c('label', [_c('input', {
+    class: 'check_this-' + _vm.order + ' check_edit-' + _vm.order,
+    attrs: {
+      "type": "checkbox",
+      "value": "edit"
+    },
+    on: {
+      "change": function($event) {
+        _vm.send_v_checks(_vm.order, 'edit')
+      }
+    }
+  }), _c('span', [_vm._v(" edit page")])])])]) : _vm._e(), _vm._v(" "), _c('td', [_c('input', {
     staticClass: "form-control d_value-\"+ i +\"",
     attrs: {
       "placeholder": "Defualt value",
       "name": 'default_value[' + _vm.order + ']',
       "type": "text"
     }
-  })]), _vm._v(" "), _c('td', [_c('div', {
+  })]), _vm._v(" "), (_vm.page == 'edit') ? _c('td', [_c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "placeholder": "Label name",
+      "name": "'label_name['+ order +']'",
+      "type": "text"
+    }
+  })]) : _vm._e(), _vm._v(" "), _c('td', [_c('div', {
     staticClass: "btn btn-danger remove_field",
     attrs: {
       "num": "+ i +"

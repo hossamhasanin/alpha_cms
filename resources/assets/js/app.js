@@ -49,7 +49,7 @@ Vue.component("old_field" , {
                     </div>
                     </td>
                     <td>
-                        <input type="hidden" v-bind:name="'visibility['+ old_field.visibility +']'" v-bind:id="'send_c_value-'+old_field.id" v-bind:value="old_field.visibility">
+                        <input type="hidden" v-bind:name="'visibility['+ old_field.id +']'" v-bind:id="'send_c_value-'+old_field.id" v-bind:value="old_field.visibility">
                               <div>
                                  <label>
                                    <input type="checkbox"  @change="check_all(old_field.id)" v-bind:class="'check_all-'+old_field.id" ><span> All</span>
@@ -110,6 +110,22 @@ Vue.component("old_field" , {
                     $(".check_add-" + field.id).prop("checked", true);
                     document.getElementById("send_c_value-" + id).value += "add,,";
                 }
+        },
+        send_v_checks(order , val){
+            var chosed_allready = document.getElementById("send_c_value-"+order).value;
+            if ($(".check_"+ val +"-"+order).prop("checked") && chosed_allready.search(val) == -1) {
+                document.getElementById("send_c_value-"+order).value += val + ","
+                if (document.getElementById("send_c_value-"+order).value.search("add") > -1 && document.getElementById("send_c_value-"+order).value.search("edit") > -1 && document.getElementById("send_c_value-"+order).value.search("show") > -1){
+                    $(".check_all-"+order).prop("checked" , true)
+                }
+            }
+            if (!$(".check_"+ val +"-"+order).prop("checked")){
+                var new_value = document.getElementById("send_c_value-"+order).value.replace(val + "," , '');
+                document.getElementById("send_c_value-"+order).value = new_value
+                //if (document.getElementById("send_c_value-"+order).value == ""){
+                $(".check_all-"+order).prop("checked" , false)
+                //}
+            }
         }
     },
     mounted(){
@@ -129,6 +145,9 @@ Vue.component("noti_undo" , {
     methods: {
         field_undo(deleted_field){
             back_again.push({component: "old_field" , props: {old_field: deleted_field}});
+            this.$http.post("/api/v1/restore_field" , {deleted_field: this.deleted_field}).then(response => {
+                console.log(response);
+            });
             $(".deleted_field-"+deleted_field.id).remove();
             this.collapsed = true;
         }
@@ -157,7 +176,9 @@ Vue.component("noti_undo" , {
     noti_undo: [],
     back_again: back_again,
     add_new_relations: [],
-    order_add_relaion: parseInt($("#last_relationship").val())
+    order_add_relaion: parseInt($("#last_relationship").val()),
+    order_add_field: parseInt($("#last_field").val()),
+    add_new_field: []
   },
   methods: {
   	add_relation() {
@@ -174,7 +195,7 @@ Vue.component("noti_undo" , {
   	},
   	add_field() {
   		this.field_order += 1;
-        this.all_fields.push({component: 'add_field', props: {order: this.field_order}});
+        this.all_fields.push({component: 'add_field', props: {order: this.field_order , page: "add"}});
   	},
     
     // put the chosen values in the field that will send to the controller to store in database
@@ -218,9 +239,9 @@ Vue.component("noti_undo" , {
       if (!$(".v_check_"+ val +"-"+order).prop("checked")){
         var new_value = document.getElementById("send_c_value-"+order).value.replace(val + "," , '');
         document.getElementById("send_c_value-"+order).value = new_value
-        if (document.getElementById("send_c_value-"+order).value == ""){
-          $("#check_all-"+order).prop("checked" , false)
-        }
+        //if (document.getElementById("send_c_value-"+order).value == ""){
+        $("#check_all-"+order).prop("checked" , false)
+        //}
       }
     },
 
@@ -239,6 +260,10 @@ Vue.component("noti_undo" , {
         //this.order_add_relaion = last_field;
         this.order_add_relaion += 1;
         this.add_new_relations.push({component: "edit_relation" , props: {field: "" , ids: this.order_add_relaion , relation_table: "" , table_id: "" , all_fields: all_fields , relation_name: ""}});
+    },
+    add_new_field_in_edit(){
+        this.order_add_field += 1;
+        this.add_new_field.push({component: "add_field" , props: {order: this.order_add_field , page: "edit"}});
     }
 
   },

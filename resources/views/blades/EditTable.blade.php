@@ -3,13 +3,14 @@
 @section("content")
 
     <input type="hidden" id="last_relationship" value={{ $last_relationship }}>
+    <input type="hidden" id="last_field" value={{ $last_field }}>
     <section class="content">
         {{ Form::open(["route" => ["update_table" , $table_id] , "method" => "put"])  }}
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Add options</h3>
+                        <h3 class="box-title">Edit : {{ $table_nane }}</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -20,6 +21,11 @@
                                         <li>{{ $error }}</li>
                                     @endforeach
                                 </ul>
+                            </div>
+                        @endif
+                        @if(session()->has('edit_table'))
+                            <div class="alert alert-success">
+                                <h4>{{ session()->get('edit_table') }}</h4>
                             </div>
                         @endif
                         @if(session()->has('add_option'))
@@ -96,19 +102,22 @@
                                 </tr>
                             @endforeach
                             <tr :is="back_ag.component" v-for="back_ag in back_again" v-bind="back_ag.props"></tr>
+                            <tr :is="field.component" v-for="field in add_new_field" v-bind="field.props"></tr>
                         </table>
                             <div :is="undo.component" v-for="undo in noti_undo" v-bind="undo.props"></div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="btn btn-success pull-right" v-on:click="add_new_field_in_edit()">Add new field</div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row" style="margin-bottom: 10px;">
             <div class="col-md-4">
-                <div class="btn btn-success" v-on:click="add_new_relation({{ $all_fields }})" >Add</div>
+                <div class="btn btn-success" v-on:click="add_new_relation({{ $all_fields }})" >New Relationship <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                </div>
             </div>
         </div>
         <div :is="add_new.component" v-for="add_new in add_new_relations" v-bind="add_new.props" :all_tables="{{ $all_tables }}"></div>
