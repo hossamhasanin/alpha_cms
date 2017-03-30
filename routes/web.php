@@ -96,9 +96,24 @@ foreach (array_count_values($tr) as $v){
 
      //dd(\App\a_Tables::pluck("table"));
 
-    $s = \App\a_Tables::where("slug" , "tester")->first()->child_relation()->get();
+    /**$s = \App\a_Tables::where("slug" , "tester")->first()->child_relation()->get();
    // $d = \App\relationships::where("child_id" , "2")->get()->all()->fields->get();
-    dd($s);
+    dd($s);*/
+    $relation_child_function = '
+public function tester(){
+        return $this->belongsTo("App\tester" , "koko");
+}';
+
+    $extract_relation_function = '/public\s*function\s*(\w+)\s*\(\)\s*\n*\{\s*\n*return\s+\$this->belongsTo\("App\\\\([a-zA-Z]+)"\s*,\s*"([a-zA-Z]+)"\);\s*\n*\}/';
+
+
+    preg_match($extract_relation_function,
+        $relation_child_function, $matches);
+    //$host = $matches[1];
+    dd($matches);
+// get last two segments of host name
+    /*preg_match('/[^.]+\.[^.]+$/', $host, $matches);
+    echo "domain name is: {$matches[0]}\n";*/
 
 
 

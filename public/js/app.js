@@ -11270,6 +11270,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component("old_field", {
     methods: {
         remove_old: function remove_old(id) {
             $(".old_field-" + id).remove();
+            this.$http.post("/api/v1/restore_field", { deleted_field: this.old_field }).then(function (response) {
+                console.log(response);
+            });
         },
         check_all: function check_all(id) {
             $(".check_this-" + id).prop('checked', $(".check_all-" + id).prop("checked"));
@@ -12764,21 +12767,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "col-md-3"
   }, [_c('label', {
     attrs: {
-      "for": "relation_name"
-    }
-  }, [_vm._v("Relation Name")]), _vm._v(" "), _c('input', {
-    staticClass: "form-control",
-    attrs: {
-      "type": "text",
-      "name": 'relation_name[' + _vm.ids + ']'
-    },
-    domProps: {
-      "value": _vm.relation_name
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "col-md-3"
-  }, [_c('label', {
-    attrs: {
       "for": "field"
     }
   }, [_vm._v("field name")]), _vm._v(" "), _c('select', {
@@ -12790,7 +12778,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     return _c('option', {
       domProps: {
         "value": the_field,
-        "selected": the_field == _vm.field ? true : ''
+        "selected": the_field == _vm.field ? true : false
       }
     }, [_vm._v(_vm._s(the_field))])
   })], 2)]), _vm._v(" "), _c('div', {
@@ -12820,14 +12808,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         })[0]
       }
     }
-  }, _vm._l((_vm.all_tables), function(relationship) {
+  }, [_c('option', [_vm._v("Chose")]), _vm._v(" "), _vm._l((_vm.all_tables), function(relationship) {
     return _c('option', {
       domProps: {
         "value": relationship,
         "selected": relationship == _vm.relation_table ? true : false
       }
     }, [_vm._v(_vm._s(relationship))])
-  }))]), _vm._v(" "), _c('div', {
+  })], 2)]), _vm._v(" "), _c('div', {
+    staticClass: "col-md-3"
+  }, [_c('label', {
+    attrs: {
+      "for": "relation_name"
+    }
+  }, [_vm._v("Relation Name")]), _vm._v(" "), _c('input', {
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "name": 'relation_name[' + _vm.ids + ']'
+    },
+    domProps: {
+      "value": _vm.relation_name
+    }
+  })]), _vm._v(" "), _c('div', {
     staticClass: "col-md-3"
   }, [_c('label', [_vm._v("Remove")]), _vm._v(" "), _c('div', {
     staticClass: "btn btn-danger form-control",

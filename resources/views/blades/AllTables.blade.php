@@ -29,7 +29,7 @@
                                     <td>{{ $table->slug }}</td>
                                     <td>{{ $table->link_name }}</td>
                                     <td><i class="fa {{ $table->icon }}"></i></td>
-                                    <td><div class="btn btn-warning">Edit</div> <div class="btn btn-danger">Delete</div> @if($table->table != "users") <a href="{{ route('add_option' , $table->slug) }}" class="btn btn-primary">Add Option</a> @endif </td>
+                                    <td><a href="{{ route("edit_table" , $table->slug) }}" class="btn btn-warning">Edit</a> <div class="btn btn-danger">Delete</div> @if($table->table != "users") <a href="{{ route('add_option' , $table->slug) }}" class="btn btn-primary">Add Option</a> @endif </td>
                                </tr>
                             @endforeach
                         </table>

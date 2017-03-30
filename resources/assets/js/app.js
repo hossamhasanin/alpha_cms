@@ -84,6 +84,9 @@ Vue.component("old_field" , {
     methods:{
         remove_old(id){
             $(".old_field-"+id).remove();
+            this.$http.post("/api/v1/restore_field" , {deleted_field: this.old_field}).then(response => {
+                console.log(response);
+            });
         },
         check_all(id){
             $(".check_this-"+id).prop('checked', $(".check_all-"+id).prop("checked"));
