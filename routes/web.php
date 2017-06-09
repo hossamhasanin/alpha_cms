@@ -26,7 +26,7 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
             Route::get("/add" , function () {
               $tables = \App\a_Tables::get();
               return view("blades.addTable" , ["all_tables" => $tables]);
-            });
+            })->name("get_add_table");
 
             Route::post("/add" , "TableController@AddNew")->name("add_table");
 
@@ -39,11 +39,21 @@ Route::group(["prefix" => "dashboard" , "middleware" => "auth"] , function (){
           Route::put("/update/{table_id}" , "TableController@UpdateTable")->name("update_table")->where("table_id" , "\d+");
       });
 
+      // Categories routs
+      Route::group(["prefix" => "cat"] , function ()
+      {
+          Route::get("/" , "CategoryController@AllCats")->name("all_cats");
+          Route::get("/add" , "CategoryController@AddNew_form")->name("get_add_cat");
+          Route::post("/add" , "CategoryController@AddNew")->name("add_cat");
+      });
+
+      // Show all tables that inside the database and save inside the (a_table)
       Route::get("/tables/" , "TableController@ShowAll")->name("show_all");
 
-      Route::get("/{table}" , "PagesController@showAll");
+      // Show the columns that is inside that table {table}
+      Route::get("/{table}" , "PagesController@ShowData");
 
-      Route::get("/add/{table}" , "PagesController@newData");
+     // Route::get("/add/{table}" , "PagesController@newData");
 
 });
 

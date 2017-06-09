@@ -162,4 +162,6 @@
 });
 </script>
 
-@endsection
+
+<!-- Warning do not use it causes errors with laravel 5.4 -->
+@stop

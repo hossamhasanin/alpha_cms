@@ -55,7 +55,7 @@
                                             <option value="int(11)" {!! $field_data->field_type == "int(11)" ? "selected" : "" !!}>Integer</option>
                                             <option value="longText" {!! $field_data->field_type == "longText" ? "selected" : "" !!}>LongText</option>
                                             <option value="mediumText" {!! $field_data->field_type == "mediumText" ? "selected" : "" !!}>MediumText</option>
-                                            <option value="varchar(255)" {!! $field_data->field_type == "varchar(255)" ? "selected" : "" !!}>Varchare</option>
+                                            <option value="varchar(255)" {!! $field_data->field_type == "string" ? "selected" : "" !!}>Varchare</option>
                                             <option value="text" {!! $field_data->field_type == "text" ? "selected" : "" !!}>Text</option>
                                         </select>
                                     </td>
@@ -110,6 +110,7 @@
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <div class="btn btn-success pull-right" v-on:click="add_new_field_in_edit()">Add new field</div>
+                        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
                     </div>
                 </div>
             </div>
@@ -125,5 +126,33 @@
                 <edit_relation ids="{{ $relation->id }}" table_id="{{ $table_id }}" :all_tables="{{ $all_tables }}" relation_table="{{ $relation->parent_table->table }}" field="{{ $relation->fields->field_name }}" :all_fields="{{ $all_fields }}" relation_name="{{ $relation->relation_name }}"></edit_relation>
         @endforeach
         {{ Form::close() }}
+    <!-- Modal -->
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" style="border-radius: 10px;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Modal Header</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <h4 style="margin: 5px;">Add parent function</h4>
+                            <textarea id="parent_code"><?php echo "<?php \n\n/*Add your parent function*/ \n\n?>" ?></textarea>
+                            <hr>
+                            <h4 style="margin: 5px;">Add child function</h4>
+                            <textarea id="child_code"><?php echo "<?php \n\n/*Add your child function*/ \n\n?>" ?></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary pull-left">Add</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </section>
-@endsection
+@stop

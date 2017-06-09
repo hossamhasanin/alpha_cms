@@ -18,6 +18,14 @@ axios.interceptors.request.use(function(config){
   return config
 })
 
+Vue.filter("slugify" , function (title) {
+  var slug = title.replace(/ /g , "-");
+  if (slug.slice(-1) == "-"){
+    slug = slug.slice(0 ,-1)
+  }
+  return slug;
+})
+
 // Making axios available as $http 
 // so that the ajax calls are not axios dependent
 Vue.prototype.$http = axios
@@ -181,7 +189,8 @@ Vue.component("noti_undo" , {
     add_new_relations: [],
     order_add_relaion: parseInt($("#last_relationship").val()),
     order_add_field: parseInt($("#last_field").val()),
-    add_new_field: []
+    add_new_field: [],
+    cat_name: ""
   },
   methods: {
   	add_relation() {
@@ -275,6 +284,22 @@ Vue.component("noti_undo" , {
   }
 
 })
+
+var myTextarea = document.getElementById("koko");
+
+var editor = CodeMirror.fromTextArea(document.getElementById("parent_code"), {
+    matchBrackets: true,
+    mode: "application/x-httpd-php",
+    indentUnit: 4,
+    indentWithTabs: true
+});
+
+var editor2 = CodeMirror.fromTextArea(document.getElementById("child_code"), {
+    matchBrackets: true,
+    mode: "application/x-httpd-php",
+});
+
+
 
 
 

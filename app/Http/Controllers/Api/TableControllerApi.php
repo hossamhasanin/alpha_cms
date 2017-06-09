@@ -38,6 +38,7 @@ class TableControllerApi extends Controller
             echo $e;
         }
         return response(["id" => $id,"name" => $name , "type" => $type , "nullable" => $nullable , "visibility" => $visibility , "default_value" => $default_value , "label_name" => $label_name , "table_id" => $table_id] , 200);
+        //return "sent";
     }
 
     public function DeleteRelationship($relation_table , $child_table_id , $relation_id){

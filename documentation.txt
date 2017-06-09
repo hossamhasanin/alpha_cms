@@ -1,0 +1,39 @@
+|-------------------------------------------------------------------------|
+	Notes: this project built in laravel 5.4 and uses npm and node js
+	!(1) Do not use @endsection this causes TokenMismatchException error
+		instead use @stop
+|-------------------------------------------------------------------------|
+
+|-------------------------------------------------------------------------|
+	The main modules in this project is :
+
+	(1) User and its table is users
+
+	(2) a_Table and its table is (a_table) : this module contains the
+		modules and important data about it
+
+	(3) fields and its table is fields : this contains the fields of
+		all modules and important info about it like (its type and
+		 field name , ....)
+
+	(4) relationships and its table is relationships : this contains
+		the info about the relationships between modules and tables
+|-----------------------------------------------------------------------|
+
+|-----------------------------------------------------------------------|
+	Here is the functios that is important and i use it:
+
+	(1) Schema:getColumnListing($table_name) => this returns array of
+		the all columns in the table | takes the tabel's name
+
+	(2) Schema::getColumnType($table , $column) => this takes the table's
+		name and the column that i wanna its type | returns the type of
+		the column
+|------------------------------------------------------------------------|
+
+|------------------------------------------------------------------------|
+	The code that i got tired looking for it :
+
+	(1) Artisan::call('make:model', [ "name" => "koko" ]); this execute
+		this php artisan make:model koko
+|-------------------------------------------------------------------------|

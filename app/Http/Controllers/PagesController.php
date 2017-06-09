@@ -12,7 +12,7 @@ use App\a_Tables;
 class PagesController extends Controller
 {
 
-      public function showAll($link)
+      public function ShowData($link)
       {
 
           // $tables = DB::select('SHOW TABLES');
@@ -21,13 +21,18 @@ class PagesController extends Controller
           //       $allTables[] = $t->Tables_in_alpha_cms;
           // }
 
+          // Get the table that called from ($link) get all data about it
           $a_table = a_Tables::where('slug', $link)->first();
 
+          // Check if the table is exsist
           if ($a_table){
 
+              // Bring the module that indicates to that table
               $conv = "\App\\".$a_table->module_name;
+              // Get the data inside that table just take 8 by 8
               $allData = $conv::paginate(8);
               //$keys = [];
+              // Get the columns of that table
               $columns = Schema::getColumnListing($a_table->table);
 
               // foreach ($columns as $column) {
@@ -35,6 +40,7 @@ class PagesController extends Controller
               //       $keys[$column] = $c_type;
               // }
 
+              // Render the bage
               return view("blades.viewAll" , ["columns" => $columns , "all" => $allData , "p_name" => $a_table->link_name]);
 
           }else {
@@ -43,10 +49,10 @@ class PagesController extends Controller
 
       }
 
-      public function newData($link)
-      {
-          $a_table = a_Tables::where('slug', $link)->first();
-      }
+      // public function newData($link)
+      // {
+      //     $a_table = a_Tables::where('slug', $link)->first();
+      // }
 
 
 }

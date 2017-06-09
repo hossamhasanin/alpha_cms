@@ -179,6 +179,7 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
         //Laracasts\Utilities\JavaScript\JavaScriptServiceProvider,
 
 

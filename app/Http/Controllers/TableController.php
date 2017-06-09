@@ -42,10 +42,14 @@ class TableController extends Controller
         'icon' => 'required',
         'field_name.*' => 'required',
         'field_type.*' => 'required',
-        'relation_tabels.*' => "required",
-        "relation_fields.*" => "required",
-        "relation_name.*" => "required"
+        //'relation_tabels.*' => "required",
+        //"relation_fields.*" => "required",
+        //"relation_name.*" => "required"
     ]);
+
+      if (isset($request->table_name)){
+          $request->table_name = substr($request->table_name, -1) != "s" ? $request->table_name . "s" : $request->table_name;
+      }
 
         foreach (array_count_values($request->field_name) as $names){
             if ($names > 1){
@@ -54,10 +58,12 @@ class TableController extends Controller
             }
         }
 
-        foreach (array_count_values($request->relation_name) as $names){
-            if ($names > 1){
-                return redirect("dashboard/table/add")->withErrors("There is fields repeated");
-                die();
+        if ($request->relation_name){
+            foreach (array_count_values($request->relation_name) as $names){
+                if ($names > 1){
+                    return redirect("dashboard/table/add")->withErrors("There is fields repeated");
+                    die();
+                }
             }
         }
 
@@ -73,8 +79,10 @@ class TableController extends Controller
       $a_tables->module_name = $request->module_name;     
       // store array data in field by implode "," in it to avoid errors
       $a_tables->field_types = implode("," ,$request->field_type);
-      // store the tables of the relationships
-      $a_tables->relationships = implode("," , $request->relation_tabels);
+      if ($request->relation_tabels){
+        // store the tables of the relationships
+        $a_tables->relationships = implode("," , $request->relation_tabels);
+      }
       // store the icon that should appear in the slide list in dashboard (I use the icons of font awoesome)
       $a_tables->icon = $request->icon;
       // store array data in field by implode "," in it to avoid errors
@@ -142,6 +150,9 @@ class TableController extends Controller
         if ($request->relation_tabels){
           $this->modify_model($request->relation_tabels , $request->relation_fields , $request->table_name , $request->module_name , $request->relation_name);
         }
+
+        $request->session()->flash('table_success', 'Table was added successfully!');
+        return redirect()->route("show_all");
 
     }
 
@@ -275,7 +286,7 @@ public function '. $relation_parent_name .'(){
 
         $last_field = isset(fields::orderBy('id', 'desc')->first()->id) ? fields::orderBy('id', 'desc')->first()->id : 0;
 
-        $relations = a_Tables::where("slug" , "tester")->first()->child_relation()->get();
+        $relations = a_Tables::where("slug" , $table)->first()->child_relation()->get();
 
         $all_fields = fields::pluck("field_name");
 
@@ -305,17 +316,21 @@ public function '. $relation_parent_name .'(){
             }
         }
 
-        foreach (array_count_values($request->relation_name) as $names){
-            if ($names > 1){
-                return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is relation_names repeated");
-                die();
+        if ($request->relation_name){
+            foreach (array_count_values($request->relation_name) as $names){
+                if ($names > 1){
+                    return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is relation_names repeated");
+                    die();
+                }
             }
         }
 
-        foreach (array_count_values($request->field_in_relationship) as $names){
-            if ($names > 1){
-                return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is field_in_relationships repeated");
-                die();
+        if ($request->field_in_relationship){
+            foreach (array_count_values($request->field_in_relationship) as $names){
+                if ($names > 1){
+                    return redirect("dashboard/table/edit/"+ $table_name)->withErrors("There is field_in_relationships repeated");
+                    die();
+                }
             }
         }
 
@@ -341,7 +356,7 @@ public function '. $relation_parent_name .'(){
             $requested_field = fields::find($field_id);
             $requested_field->field_name = $request->field_name[$field_id];
             $requested_field->table_id = $table_id;
-            $requested_field->field_type = $request->field_type[$field_id];
+            $requested_field->field_type = $request->field_type[$field_id] == "varchar(255)" ? "string" : $request->field_type[$field_id];
             $requested_field->visibility = $request->visibility[$field_id];
             //$requested_field->relation_table = isset($request->relationship[$field_id]) ? $request->relationship[$field_id] : NULL;
             $requested_field->field_nullable = isset($request->nullable[$field_id]) ? $request->nullable[$field_id] : 0;

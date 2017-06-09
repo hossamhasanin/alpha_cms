@@ -11243,6 +11243,14 @@ __WEBPACK_IMPORTED_MODULE_2_axios___default.a.interceptors.request.use(function 
     return config;
 });
 
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.filter("slugify", function (title) {
+    var slug = title.replace(/ /g, "-");
+    if (slug.slice(-1) == "-") {
+        slug = slug.slice(0, -1);
+    }
+    return slug;
+});
+
 // Making axios available as $http 
 // so that the ajax calls are not axios dependent
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$http = __WEBPACK_IMPORTED_MODULE_2_axios___default.a;
@@ -11365,7 +11373,8 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         add_new_relations: [],
         order_add_relaion: parseInt($("#last_relationship").val()),
         order_add_field: parseInt($("#last_field").val()),
-        add_new_field: []
+        add_new_field: [],
+        cat_name: ""
     },
     methods: {
         add_relation: function add_relation() {
@@ -11459,6 +11468,20 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     mounted: function mounted() {
         this.check_exist();
     }
+});
+
+var myTextarea = document.getElementById("koko");
+
+var editor = CodeMirror.fromTextArea(document.getElementById("parent_code"), {
+    matchBrackets: true,
+    mode: "application/x-httpd-php",
+    indentUnit: 4,
+    indentWithTabs: true
+});
+
+var editor2 = CodeMirror.fromTextArea(document.getElementById("child_code"), {
+    matchBrackets: true,
+    mode: "application/x-httpd-php"
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 

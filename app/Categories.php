@@ -4,9 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class tester extends Model
+class Categories extends Model
 {
     //
-                
 }
-                

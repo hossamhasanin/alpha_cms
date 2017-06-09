@@ -5,6 +5,9 @@
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
+            @if (session()->has("table_success"))
+                    <div class="alert alert-success"><h3>{{ session()->get("table_success") }}</h3></div>
+            @endif
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">All tables</h3>
@@ -41,4 +44,4 @@
         </div>
     </section>
 
-@endsection
+@stop
